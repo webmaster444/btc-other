@@ -1,0 +1,1 @@
+https://dev.decryptz.com/api/v1/charts/dashboard?symbol=btc&interval=day&startDate=2018-04-01%2000:00:00&endDate=2018-05-16%2000:00:00

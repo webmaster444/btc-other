@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="cschart.css">
+</head>
+<body>
+    <div id="demobox">
+        <div id="csbox">
+            <ul class="list-inline">
+   <li class="list-inline-item">
+      <legend class="col-form-label form-label-block text-muted">Type:</legend> 
+      <select id="linechart_select" class="form-control custom-select">
+         <option value="PS">Positive Sentiments</option>
+         <option value="PV">Positive Volume</option>
+         <option value="NV">Negative Volume</option>
+         <option value="TV">Total Volume</option>
+      </select>
+   </li>
+   <li class="list-inline-item ml-md-5">
+      <fieldset id="__BVID__83" role="group" aria-labelledby="__BVID__83__BV_label_" class="b-form-group form-group">
+         <legend id="__BVID__83__BV_label_" class="col-form-label pt-0 text-muted">Studies:</legend>
+         <div role="group" aria-labelledby="__BVID__83__BV_label_" class="">
+            <div id="checkboxes2" role="group" tabindex="-1" class="mb-0">
+               <div class="ema12 custom-control custom-checkbox custom-control-inline">
+                <input id="__BVID__85" type="checkbox" name="studies" autocomplete="off" true-value="ema12" class="custom-control-input" value="ema12"><label for="__BVID__85" class="custom-control-label">EMA12</label></div>
+               <div class="ema26 custom-control custom-checkbox custom-control-inline">
+                <input id="__BVID__86" type="checkbox" name="studies" autocomplete="off" true-value="ema26" class="custom-control-input" value="ema26"><label for="__BVID__86" class="custom-control-label">EMA26</label></div>
+               <div class="implied_price custom-control custom-checkbox custom-control-inline">
+                <input id="__BVID__87" type="checkbox" name="studies" autocomplete="off" true-value="implied_price" class="custom-control-input" value="implied_price"><label for="__BVID__87" class="custom-control-label">Implied Price</label></div>
+               <!---->
+            </div>
+            <!----><!----><!---->
+         </div>
+      </fieldset>
+   </li>
+   <li class="list-inline-item ml-md-5 social-volume__view">
+      <fieldset id="__BVID__87" role="group" aria-labelledby="__BVID__87__BV_label_" class="b-form-group form-group">
+         <legend id="__BVID__87__BV_label_" class="col-form-label pt-0 text-muted">View:</legend>
+         <div role="group" aria-labelledby="__BVID__87__BV_label_" class="">
+            <div id="radioes2" role="radiogroup" tabindex="-1" class="mb-0 btn-group-toggle btn-group">
+                <label class="p-0 mr-2 btn btn-link"><input id="interval_1m" type="radio" name="view" autocomplete="off" class="" value="1m"><span>1m</span></label> 
+                <label class="p-0 mr-2 btn btn-link active"><input id="interval_1h" type="radio" name="view" autocomplete="off" class="" value="1h"><span>1h</span></label> 
+                <label class="p-0 mr-2 btn btn-link"><input id="interval_1d" type="radio" name="view" autocomplete="off" class="" value="1d"><span>1d</span></label></div>
+            <!----><!----><!---->
+         </div>
+      </fieldset>
+   </li>
+   <li class="list-inline-item ml-md-5">
+      <legend class="col-form-label form-label-block text-muted">Period:</legend> 
+      <select id="period" class="d-inline-block form-control custom-select">
+         <option value="1d">1d</option>
+         <option value="1w" selected="">1w</option>
+         <option value="2w">2w</option>
+         <option value="1m">1m</option>
+      </select>
+   </li>
+</ul>
+            <div id="chart1"></div>
+        </div> <!-- csbox -->
+    </div> <!-- demobox -->
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <!-- <script src="//d3js.org/d3-queue.v3.min.js"></script> -->
+    <!-- <script src="//d3js.org/topojson.v1.min.js"></script> -->
+    <script src="d3-zoom-pan-extent.js"></script>
+    <!-- <script src="cschart.js"></script> -->
+    <script src="cschart1.js"></script>
+    <script src="csbars.js"></script>
+    <script src="cslinechart.js"></script>
+    <!-- <script src="csheader.js"></script> -->
+    <script src="csdataprep.js"></script>
+    <script src="csmain.js"></script>
+    <script src="emchart.js"></script>
+
+</body>
+</html>

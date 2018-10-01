@@ -235,6 +235,64 @@ $('.option a').click(function(){
         $(this).next().removeClass('hide');
     }else{
         $(this).next().addClass('hide');    
-    }
-    
+    }    
 })
+
+$('.option ul li').click(function(){
+    if(!$(this).hasClass('study')){
+        $(this).siblings().removeClass('active');    
+    }
+    $(this).parent().addClass('hide');    
+    $(this).parent().siblings('a').removeClass('active');
+    $(this).addClass('active');
+
+    updateDropDown($(this).attr('data-option'));
+    updateTopChart($(this).attr('data-option'));
+})
+
+function updateDropDown(option){
+    switch(option){
+        case "sv":
+        $("#linechart-stat .stats-txt").html('Social Volume');
+        break;
+        case "ps":
+        $("#linechart-stat .stats-txt").html('% Positive Sentiment');
+        break;
+        case "pv":
+        $("#linechart-stat .stats-txt").html('Positive Tweets');
+        break;
+        case "nv":
+        $("#linechart-stat .stats-txt").html('Negative Tweets');
+        break;
+        case "1w":
+        $("#duration-stat .stats-txt").html(option);
+        break;        
+        case "2w":
+        $("#duration-stat .stats-txt").html(option);
+        break;        
+        case "1m":
+        $("#duration-stat .stats-txt").html(option);
+        break;        
+        case "3m":
+        $("#duration-stat .stats-txt").html(option);
+        break;        
+        case "6m":
+        $("#duration-stat .stats-txt").html(option);
+        break;  
+        case "1y":
+        $("#duration-stat .stats-txt").html(option);
+        break;
+    }
+}
+function updateTopChart(option){
+    switch(option){
+        case "sv":
+        break;
+        case "ps":
+        break;
+        case "pv":
+        break;
+        case "nv":
+        break;
+    }
+};

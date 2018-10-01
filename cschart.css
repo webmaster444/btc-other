@@ -380,6 +380,7 @@ path.line{
     list-style-type: none;
     padding: 6px;
     text-align: center;
+    cursor: pointer;
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .option a:hover{
@@ -485,4 +486,14 @@ path.line{
     display: flex;
     justify-content: space-between;
     padding-bottom: 5px;
+}
+
+.study.ema26.active{
+    color:#e29eda;
+}
+.study.ip.active{
+    color:#faedb2;
+}
+.study.ema12.active{
+    color: #07b0bb;
 }

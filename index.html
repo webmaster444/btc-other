@@ -15,42 +15,42 @@
         <div id="csbox">
             <div class="options-list">
               <div class="option dropdown">
-                <a href="#" class="js-statname js-chart-title"><span class="stats-txt">Social Volume</span> &nbsp;<span class="fa fa-angle-down"></span></a>
+                <a href="#" class="js-statname js-chart-title" id="linechart-stat"><span class="stats-txt">Social Volume</span> &nbsp;<span class="fa fa-angle-down"></span></a>
                 <ul class="chart-stat hide">
-                  <li class="js-stat active">Social Volume</li>
-                  <li class="js-stat">% Positive Sentiment</li>
-                  <li class="js-stat">Positive Tweets</li>
-                  <li class="js-stat">Negative Tweets</li>
+                  <li class="js-stat active" data-option="sv">Social Volume</li>
+                  <li class="js-stat" data-option="ps">% Positive Sentiment</li>
+                  <li class="js-stat" data-option="pv">Positive Tweets</li>
+                  <li class="js-stat" data-option="nv">Negative Tweets</li>
                 </ul>
               </div>
 
-                <div class="option dropdown">
-                <a href="#" class="js-statname js-chart-title"><span class="stats-txt">Studies</span>&nbsp;<span class="fa fa-angle-down"></span></a>
+              <div class="option dropdown ema_options">
+                <a href="#" class="js-statname js-chart-title" id="studies-stat"><span class="stats-txt">Studies</span>&nbsp;<span class="fa fa-angle-down"></span></a>
                 <ul class="chart-stat hide">
-                  <li class="js-stat active">EMA12</li>
-                  <li class="js-stat">EMA26</li>
-                  <li class="js-stat">Implied Price</li>                  
-                </ul>
-              </div>
-
-              <div class="option dropdown">
-                <a href="#" class="js-statname js-chart-title"><span class="stats-txt">1m</span>&nbsp;<span class="fa fa-angle-down"></span></a>
-                <ul class="chart-stat hide">
-                  <li class="js-stat active">1m</li>
-                  <li class="js-stat">1h</li>
-                  <li class="js-stat">1d</li>                  
+                  <li class="study ema12 js-stat" data-option="ema12">EMA12</li>
+                  <li class="study ema26 js-stat" data-option="ema26">EMA26</li>
+                  <li class="study ip js-stat" data-option="ip">Implied Price</li>                  
                 </ul>
               </div>
 
               <div class="option dropdown">
-                <a href="#" class="js-statname js-chart-title"><span class="stats-txt">1w</span>&nbsp;<span class="fa fa-angle-down"></span></a>
+                <a href="#" class="js-statname js-chart-title" id="period-stat"><span class="stats-txt">1d</span>&nbsp;<span class="fa fa-angle-down"></span></a>
                 <ul class="chart-stat hide">
-                  <li class="js-stat active">1w</li>
-                  <li class="js-stat">2w</li>
-                  <li class="js-stat">1m</li>
-                  <li class="js-stat">3m</li>
-                  <li class="js-stat">6m</li>
-                  <li class="js-stat">1y</li>
+<!--                   <li class="js-stat">1m</li>
+                  <li class="js-stat">1h</li> -->
+                  <li class="js-stat active">1d</li>                  
+                </ul>
+              </div>
+
+              <div class="option dropdown">
+                <a href="#" class="js-statname js-chart-title" id="duration-stat"><span class="stats-txt">1w</span>&nbsp;<span class="fa fa-angle-down"></span></a>
+                <ul class="chart-stat hide">
+                  <li class="js-stat active" data-option="1w">1w</li>
+                  <li class="js-stat" data-option="2w">2w</li>
+                  <li class="js-stat" data-option="1m">1m</li>
+                  <li class="js-stat" data-option="3m">3m</li>
+                  <li class="js-stat" data-option="6m">6m</li>
+                  <li class="js-stat" data-option="1y">1y</li>
                 </ul>
               </div>
             </div>

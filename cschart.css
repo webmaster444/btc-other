@@ -471,7 +471,9 @@ path.line{
 .sv_barbar rect{
     fill:#434753;
 }
-
+.tvbar rect{
+    fill:#505D64;
+}
 .x_move_rect{
     fill:#bfbfbf33;
 }

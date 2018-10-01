@@ -7,7 +7,7 @@ function linechart() {
             left: 5
         },
         width = 920,
-        height = 430,
+        height = 290,
         mname = "mbar1";
 
     var MValue = "PV";

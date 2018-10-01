@@ -7,10 +7,24 @@ function bottomChart() {
             left: 5
         },
         width = 920,
-        height = 440,
-        Bheight = 460;
+        height = 300,
+        Bheight = 320;
+
+    function monthDay(d){
+        var timeFormat = d3.time.format('%e');
+        var timeFormat1 = d3.time.format('%b');
+        var c = timeFormat(new Date(d));
+        if(c == 1){
+            return timeFormat1(new Date(d));
+        }
+        return c;
+    }
 
     var barHeight  = 60;
+    var yyyymmdd = d3.time.format("%Y-%m-%d");
+    var commaFormat = d3.format(",");
+    var kFormat = d3.format('.2s');
+
     function csrender(selection) {
         selection.each(function() {
             var parseDate = d3.time.format("%d-%b");            
@@ -69,7 +83,7 @@ function bottomChart() {
             // var barwidth = width / genData.length;
 
             var tmp_divider = TCount[period][interval];             
-            var barwidth = width / tmp_divider;
+            var barwidth = x.rangeBand();
                         
             var candlewidth = x.rangeBand();
             var delta = Math.round((barwidth - candlewidth) / 2);        
@@ -88,7 +102,7 @@ function bottomChart() {
             svg.append("g")
                 .attr("class", "axis xaxis")
                 .attr("transform", "translate(0," + height + ")")
-                .call(xAxis.orient("bottom"));            
+                .call(xAxis.orient("bottom").tickFormat(monthDay));            
 
             svg.append("g")
                 .attr("class", "axis yaxis")
@@ -198,15 +212,14 @@ function bottomChart() {
 
             var x_move_rect = x_move_wrapper.append("rect").attr("class",'x_move_rect')
                             .attr("x", -35)
-                            .attr("y", 2)
-                            .attr('rx',5)
-                            .attr("width", 70)
-                            .attr("height", 20);
-            x_move_wrapper.append('text').attr('x',0).attr('y',15).attr('dy',".1em").style('color','white').text('asdf');
+                            .attr("y", 0)
+                            .attr('rx',0)
+                            .attr("width", barwidth)
+                            .attr("height", height - 3);            
 
             var x_line = svg.append('line').attr('class','x_grid_line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',height).style('display','none');
             var y_line = svg.append('line').attr('class','y_grid_line').attr('x1',0).attr('y1',0).attr('x2',width).attr('y2',0).style('display','none');
-            var rect = d3.select("#chart1 svg").append("svg:rect")
+            var rect = d3.select("#chart2 svg").append("svg:rect")
                 .attr("class", "pane")
                 .attr("width", width)
                 .attr("height", height)
@@ -228,15 +241,23 @@ function bottomChart() {
                 // .call(zoom).on("wheel.zoom", null);
 
               function mousemove() {
-                // var x0 = x.invert(d3.mouse(this)[0]);
-                // var y0 = y.invert(d3.mouse(this)[1]);
-            
-                // focus_g.attr("transform", "translate(" + width + "," + (d3.mouse(this)[1]-7) + ")");
-                // x_move_wrapper.attr('transform',"translate("+d3.mouse(this)[0]+","+height+")");
-                // x_line.attr('x1',d3.mouse(this)[0]).attr('x2',d3.mouse(this)[0]);
-                // y_line.attr('y1',d3.mouse(this)[1]).attr('y2',d3.mouse(this)[1]);
-                // x_move_wrapper.select('text').text(parseDate(x0));
-                // focus_g.select("text").text(y0.toFixed(0));
+                var eachBand = x.rangeBand();
+                var index = Math.round((d3.mouse(this)[0] / eachBand));                                                
+                var val = x.domain()[index];
+                var y0 = y.invert(d3.mouse(this)[1]);
+                focus_g.select("text").text(y0.toFixed(0));
+                focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1]-7) + ")");
+                y_line.attr('y1',d3.mouse(this)[1]).attr('y2',d3.mouse(this)[1]);                
+                $('#huDate').html( yyyymmdd( new Date(genData[index].Date)));
+                $('#huOpen').html( "Open: "+commaFormat(genData[index].o));
+                $('#huClose').html("Close: "+ commaFormat(genData[index].c));
+                $('#huHigh').html("High: "+ commaFormat(genData[index].h));
+                $('#huLow').html("Low: "+ commaFormat(genData[index].l));
+                $('#huVolume').html("Volume: "+ kFormat(genData[index].v));
+                $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
+                $('#huSocial').html("Negative Tweets: "+ genData[index].nv);
+                $('.toolTip').show();
+                x_move_wrapper.select('rect').attr('x',x(val)).attr(y,0).attr('width',barwidth).attr('height',height); 
               }
 
             // function zoomed() {                

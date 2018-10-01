@@ -1,7 +1,7 @@
 function barchart() {
 
     var margin = {
-            top: 300,
+            top: 160,
             right: 50,
             bottom: 10,
             left: 5

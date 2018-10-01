@@ -105,11 +105,10 @@ function displayCS() {
 
     chart = emachart().mname("ema26").margin(0);
     d3.select("#chart1").datum(ema26).call(chart);
-
-    if (genData[0].hasOwnProperty('IP')) {
-        var chart = linechart().mname("ip").margin(0).MValue("ip");
-        d3.select("#chart1").datum(genData).call(chart);
-    }    
+    
+    var chart = linechart().mname("ip").margin(0).MValue("ip");
+    d3.select("#chart1").datum(genData).call(chart);
+    
 }
 
 function calcema(period, data) {
@@ -238,10 +237,12 @@ $('.option a').click(function(){
 $('.option ul li').click(function(){
     if(!$(this).hasClass('study')){
         $(this).siblings().removeClass('active');    
+        $(this).addClass('active');
+    }else{
+        $(this).toggleClass('active');
     }
     $(this).parent().addClass('hide');    
-    $(this).parent().siblings('a').removeClass('active');
-    $(this).addClass('active');
+    $(this).parent().siblings('a').removeClass('active');    
 
     updateDropDown($(this).attr('data-option'));
     updateTopChart($(this).attr('data-option'));
@@ -293,6 +294,14 @@ function updateTopChart(option){
             d3.select("#chart1").call(chart1);
             chart = linechart().mname("ps").margin(0).MValue("v");
             d3.select("#chart1").datum(genData).call(chart);
+            chart = emachart().mname("ema12").margin(0);
+            d3.select("#chart1").datum(ema12).call(chart);
+
+            chart = emachart().mname("ema26").margin(0);
+            d3.select("#chart1").datum(ema26).call(chart);
+            
+            var chart = linechart().mname("ip").margin(0).MValue("ip");
+            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "ps":
             $("#chart1").empty();
@@ -301,6 +310,14 @@ function updateTopChart(option){
             chart = linechart().mname("ps").margin(0).MValue("ps");
             d3.select("#chart1").datum(genData).call(chart);
             var chart = barchart().mname("sv_bar").margin(190).MValue("v");
+            d3.select("#chart1").datum(genData).call(chart);
+            chart = emachart().mname("ema12").margin(0);
+            d3.select("#chart1").datum(ema12).call(chart);
+
+            chart = emachart().mname("ema26").margin(0);
+            d3.select("#chart1").datum(ema26).call(chart);
+
+            var chart = linechart().mname("ip").margin(0).MValue("ip");
             d3.select("#chart1").datum(genData).call(chart);
             break;
         case "pv":
@@ -311,6 +328,14 @@ function updateTopChart(option){
             d3.select("#chart1").datum(genData).call(chart);
             var chart = barchart().mname("sv_bar").margin(190).MValue("v");
             d3.select("#chart1").datum(genData).call(chart);
+            chart = emachart().mname("ema12").margin(0);
+            d3.select("#chart1").datum(ema12).call(chart);
+
+            chart = emachart().mname("ema26").margin(0);
+            d3.select("#chart1").datum(ema26).call(chart);
+            
+            var chart = linechart().mname("ip").margin(0).MValue("ip");
+            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "nv":
             $("#chart1").empty();
@@ -320,6 +345,35 @@ function updateTopChart(option){
             d3.select("#chart1").datum(genData).call(chart);
             var chart = barchart().mname("sv_bar").margin(190).MValue("v");
             d3.select("#chart1").datum(genData).call(chart);
+            chart = emachart().mname("ema12").margin(0);
+            d3.select("#chart1").datum(ema12).call(chart);
+
+            chart = emachart().mname("ema26").margin(0);
+            d3.select("#chart1").datum(ema26).call(chart);
+            
+            var chart = linechart().mname("ip").margin(0).MValue("ip");
+            d3.select("#chart1").datum(genData).call(chart);
+        break;
+        case "ema12":
+            if($('.study.ema12').hasClass('active')){
+                d3.select('.ema_chart.ema_chart_wrapper_ema12').style('display','block');    
+            }else{
+                d3.select('.ema_chart.ema_chart_wrapper_ema12').style('display','none');    
+            }            
+        break;
+        case "ema26":
+            if($('.study.ema26').hasClass('active')){
+                d3.select('.ema_chart.ema_chart_wrapper_ema26').style('display','block');    
+            }else{
+                d3.select('.ema_chart.ema_chart_wrapper_ema26').style('display','none');    
+            }   
+        break;
+        case "ip":
+            if($('.study.ip').hasClass('active')){
+                d3.select('.linechart_wrapper.ip').style('display','block');    
+            }else{
+                d3.select('.linechart_wrapper.ip').style('display','none');    
+            } 
         break;
     }
 };

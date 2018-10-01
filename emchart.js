@@ -1,7 +1,7 @@
 function emachart() {
 
   var margin = {top: 300, right: 50, bottom: 10, left: 5 },
-      width = 920, height = 430, mname = "mbar1";  
+      width = 920, height = 230, mname = "mbar1";  
     
   function emalinerender(selection) {    
     selection.each(function(data) {

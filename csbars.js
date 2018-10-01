@@ -10,20 +10,16 @@ function barchart() {
         height = 60,
         mname = "mbar1";
 
-    var MValue = "Volume";
+    var MValue = "v";
 
     function barrender(selection) {        
-        selection.each(function(data) {
-
-            var x = d3.time.scale()
-                .domain([startDomain, endDomain])
-                .range([width / data.length / 2, width - width / data.length / 2]);
-                
+        selection.each(function(data) {                        
+            var x = d3.scale.ordinal().domain(genData.map(function(d){return d.dt})).rangeRoundBands([0,width],0.1);                
 
             var zoom = d3.behavior.zoom()
                 .x(x)
                 .xExtent(d3.extent(genData, function(d) {
-                    return d.Date
+                    return d.dt;
                 }));
 
             var y = d3.scale.linear()
@@ -47,8 +43,8 @@ function barchart() {
                     }
                 });
                         
-            y.domain([0, d3.max(new1_genData, function(d) {
-                return d["Volume"];
+            y.domain([0, d3.max(data, function(d) {                
+                return d["v"];
             })]).nice();
 
             svg.append("g")
@@ -60,7 +56,8 @@ function barchart() {
             var tmp_divider = TCount[period][interval];
             var barwidth = width / tmp_divider;
 
-            var fillwidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;        
+            // var fillwidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;        
+            var fillwidth = x.rangeBand();
             var bardelta = Math.round((barwidth - fillwidth) / 2);            
 
             var mbar = svg.selectAll("." + mname + "bar")
@@ -75,9 +72,9 @@ function barchart() {
                 .enter().append("rect")
                 .attr("class", mname + "fill")
                 .attr("x", function(d) {
-                    return x(d.Date) -fillwidth/2;
+                    return x(d.dt);
                 })
-                .attr("y", function(d) {
+                .attr("y", function(d) {                                    
                     return y(d[MValue]);
                 })
                 .attr("class", function(d, i) {

@@ -6,10 +6,10 @@ function emachart() {
   function emalinerender(selection) {    
     selection.each(function(data) {
   
-      var x = d3.time.scale()
-          .domain([startDomain, endDomain])
-          .range([width / genData.length / 2, (width - width / genData.length / 2 )]).nice();   
-      
+      // var x = d3.time.scale()
+      //     .domain([startDomain, endDomain])
+      //     .range([width / genData.length / 2, (width - width / genData.length / 2 )]).nice();   
+      var x = d3.scale.ordinal().domain(genData.map(function(d){return d.dt})).rangeBands([0,width]);   
       var y = d3.scale.linear()
           .rangeRound([height, 0]);
       
@@ -30,7 +30,7 @@ function emachart() {
               return d;
           }
       });        
-      y.domain(d3.extent(new1_genData, function(d) { return d.ema; })).nice();
+      y.domain(d3.extent(data, function(d) { return d.ema; })).nice();
 
   
       var xtickdelta   = Math.ceil(60/(width/data.length))
@@ -46,8 +46,9 @@ function emachart() {
       // var bardelta    = Math.round((barwidth-fillwidth)/2);  
 
       var valueline = d3.svg.line()
-      .x(function(d) { return x(d.Date); })
-      .y(function(d) { return y(d.ema); });    
+      .x(function(d) { return x(d.dt); })
+      .y(function(d) { return y(d.ema); })
+      .interpolate('basis');    
   
     svg.append("path")  
     .attr("class", mname+"line line")

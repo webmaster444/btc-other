@@ -15,9 +15,11 @@ function linechart() {
     function linerender(selection) {
         selection.each(function(data) {
 
-            var x = d3.time.scale()
-                .domain([startDomain, endDomain])
-                .range([width / genData.length / 2, width - width / genData.length / 2]);
+            // var x = d3.time.scale()
+            //     .domain([startDomain, endDomain])
+            //     .range([width / genData.length / 2, width - width / genData.length / 2]);
+
+            var x = d3.scale.ordinal().domain(genData.map(function(d){return d.dt})).rangeRoundBands([0,width],.1);   
 
             var y = d3.scale.linear()
                 .rangeRound([height, 0]);
@@ -40,7 +42,7 @@ function linechart() {
                     }
                 });
 
-            y.domain(d3.extent(new1_genData, function(d) {
+            y.domain(d3.extent(data, function(d) {
                 return d[MValue];
             })).nice();
 
@@ -55,23 +57,24 @@ function linechart() {
                 .attr("transform", "translate(" + width + ",0)")
                 .call(yAxis.orient("right").tickFormat("").tickSize(0));
 
-            var barwidth = width / genData.length;
+            // var barwidth = width / genData.length;
+            var barwidth = x.rangeBand();
             var fillwidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;
             var bardelta = Math.round((barwidth - fillwidth) / 2);
 
             var valueline = d3.svg.line()
                 .x(function(d) {
-                    return x(d.Date) + barwidth / 2;
+                    return x(d.dt) + barwidth / 2;
                 })
                 .y(function(d) {
                     return y(d[MValue]);
-                });
+                }).interpolate('basis');
 
             svg.append("path")
                 .attr("class", mname + "line line")
                 .attr("d", valueline(data));
 
-            var indicator_g = svg.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width) + "," + (y(data[data.length - 1][MValue]) - 7) + ")");
+            var indicator_g = svg.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width - 10) + "," + (y(data[data.length - 1][MValue]) - 7) + ")");
 
             indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
             indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', mname + '_indicator');

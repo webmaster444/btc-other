@@ -1,7 +1,7 @@
 var genRaw, genData;
 var ema12, ema26 = [];
-var startDate = "2018-05-01T00:00:00";
-var endDate = "2018-06-17T00:00:00";
+var startDate = "2018-09-26T00:00:00";
+var endDate = "2017-09-27T00:00:00";
 var period = "1w";
 var endDomain = Date.parse(endDate);
 var startDomain = Date.parse(startDate);
@@ -46,20 +46,15 @@ function changeDomain(period){
     return startDomain;
 }
 (function() {
-    var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval="+interval+"&startDate="+startDate+"&endDate="+endDate;
+    // var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval="+interval+"&startDate="+startDate+"&endDate="+endDate;
+    // var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
+    var url = 'data_backup.json';
     d3.json(url, function(error, data) {        
         data.forEach(function(d) {
-            d.Date = Date.parse(d.Date);
-            d.Low = +d.Low;
-            d.High = +d.High;
-            d.Open = +d.Open;
-            d.Close = +d.Close;
-            d.Volume = +d.Volume;
-            d.PV = +d.PV;
-            d.PS = +d.PS;
-            d.NV = +d.NV;
-            d.TV = +d.TV;
-        })
+            d.Date =Date.parse(d.dt);            
+            d.DateDisp = d3.time.format('%b');
+        })                
+        console.log(data);
         genRaw = data;
         ema12 = calcema(12, genRaw);
         ema26 = calcema(26, genRaw);
@@ -77,52 +72,47 @@ function changeDomain(period){
 
 function mainjs() {
     genData = genRaw;
-    displayAll();    
-}
-
-function displayAll() {    
-    displayCS();
+    displayCS();    
 }
 
 function displayCS() {
-    var chart = cschart().Bheight(460);
-    d3.select("#chart1").call(chart);
+    var chart1 = topChart().Bheight(440);
+    d3.select("#chart1").call(chart1);
 
-    var chart = barchart().mname("volume").margin(380).MValue("Volume");
+    // var chart2 = bottomChart().Bheight(400);
+    // d3.select("#chart2").call(chart2);
+
+    // var chart = barchart().mname("tv").margin(200).MValue("tv");
+    // d3.select("#chart2").datum(genData).call(chart);
+
+    var chart = barchart().mname("sv_bar").margin(380).MValue("v");
     d3.select("#chart1").datum(genData).call(chart);
 
-    var chart = linechart().mname("ps").margin(0).MValue("PS");
+    chart = linechart().mname("sv").margin(0).MValue("v");
     d3.select("#chart1").datum(genData).call(chart);
 
-    var chart = linechart().mname("pv").margin(0).MValue("PV");
+    chart = linechart().mname("ps").margin(0).MValue("ps");
     d3.select("#chart1").datum(genData).call(chart);
 
-    var chart = linechart().mname("nv").margin(0).MValue("NV");
+    chart = linechart().mname("pv").margin(0).MValue("pv");
     d3.select("#chart1").datum(genData).call(chart);
 
-    var chart = linechart().mname("tv").margin(0).MValue("TV");
+    chart = linechart().mname("nv").margin(0).MValue("nv");
     d3.select("#chart1").datum(genData).call(chart);
 
-    var chart = emachart().mname("ema12").margin(0);
+    chart = linechart().mname("tv").margin(0).MValue("tv");
+    d3.select("#chart1").datum(genData).call(chart);
+
+    chart = emachart().mname("ema12").margin(0);
     d3.select("#chart1").datum(ema12).call(chart);
 
-    var chart = emachart().mname("ema26").margin(0);
+    chart = emachart().mname("ema26").margin(0);
     d3.select("#chart1").datum(ema26).call(chart);
 
     if (genData[0].hasOwnProperty('IP')) {
-        var chart = linechart().mname("ip").margin(0).MValue("IP");
+        var chart = linechart().mname("ip").margin(0).MValue("ip");
         d3.select("#chart1").datum(genData).call(chart);
-    }
-
-    hoverAll();
-}
-
-function hoverAll() {
-    d3.select('#chart1').selectAll('path').on('mouseover', function(d, i) {
-        d3.select(this).style('stroke-width', '2px');
-    }).on('mouseout', function(d, i) {
-        d3.select(this).style('stroke-width', '1px');
-    });
+    }    
 }
 
 function calcema(period, data) {
@@ -130,7 +120,7 @@ function calcema(period, data) {
     var isum = d3.sum(data, function(d) {
         ++index;
         if (index <= period) {
-            return d.Close
+            return d.c
         }
     });
     var isma = isum / period;
@@ -138,15 +128,15 @@ function calcema(period, data) {
     var emares = [];
 
     var tmp = new Object;
-    tmp['Date'] = data[0]['Date'];
+    tmp['dt'] = data[0]['dt'];
     tmp['ema'] = isma;
 
     emares.push(tmp);
 
     for (var i = 1; i < data.length; i++) {
         var tmp_arr = new Object;
-        tmp_arr['Date'] = data[i]['Date'];
-        var tmp_ema = (data[i]['Close'] - emares[i - 1]['ema']) * multiplier + emares[i - 1]['ema'];
+        tmp_arr['dt'] = data[i]['dt'];
+        var tmp_ema = (data[i]['c'] - emares[i - 1]['ema']) * multiplier + emares[i - 1]['ema'];
         tmp_arr['ema'] = tmp_ema;
         emares.push(tmp_arr);
     }
@@ -203,8 +193,8 @@ $('input[type=radio][name=view]').change(function() {
     } else if (interval == 'day') {
         startDate = "2017-06-01T00:00:00";
     }
-    var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval=" + interval + "&startDate=" + startDate + "&endDate=" + endDate;
-
+    // var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval=" + interval + "&startDate=" + startDate + "&endDate=" + endDate;
+    var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
     d3.json(url, function(error, data) {
         $('#chart1').empty();        
         data.forEach(function(d) {
@@ -221,7 +211,7 @@ $('input[type=radio][name=view]').change(function() {
         })
         genRaw = data;
         ema12 = calcema(12, genRaw);
-        ema26 = calcema(26, genRaw);
+        ema26 = calcema(26, genRaw);        
         mainjs();
     });
 });
@@ -236,3 +226,23 @@ $(document).on("change", "#period", function() {
     mainjs();    
     $('#checkboxes2 input[type="checkbox"]').prop('checked', false);
 });
+
+$('.option a').click(function(){
+    console.log($(this).next());
+    $(this).toggleClass('active');
+    $('.option ul').addClass('hide');
+    $(this).next().toggleClass('hide');
+})
+
+$('.option a').mouseover(function(){
+    $(this).addClass('active');
+});
+
+$('.option a').mouseout(function(){
+   $(this).removeClass('active'); 
+})
+
+$('.option ul li').mouseover(function(){
+    $('.option ul li').removeClass('active');
+    $(this).addClass('active');
+})

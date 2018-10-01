@@ -201,7 +201,8 @@ function bottomChart() {
             indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
             indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'ohlc_indicator');
             indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1].c.toFixed(0));
-
+            
+            var dotline = svg.append('line').attr('class','dotted_line').attr('x1',0).attr('y1',(y(genData[genData.length - 1].c))).attr('x2',(width-7)).attr('y2',(y(genData[genData.length - 1].c) ));
             var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width) + "," + (y(genData[genData.length - 1].c) - 7) + ")").style('display','none');
 
             focus_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");

@@ -7,8 +7,8 @@ function bottomChart() {
             left: 5
         },
         width = 920,
-        height = 300,
-        Bheight = 320;
+        height = 250,
+        Bheight = 270;
 
     function monthDay(d){
         var timeFormat = d3.time.format('%e');

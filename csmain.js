@@ -76,16 +76,16 @@ function mainjs() {
 }
 
 function displayCS() {
-    var chart1 = topChart().Bheight(300);
+    var chart1 = topChart().Bheight(250);
     d3.select("#chart1").call(chart1);
 
-    var chart2 = bottomChart().Bheight(300);
+    var chart2 = bottomChart().Bheight(250);
     d3.select("#chart2").call(chart2);
 
-    var chart = barchart().mname("tv").margin(240).MValue("tv");
+    var chart = barchart().mname("tv").margin(190).MValue("tv");
     d3.select("#chart2").datum(genData).call(chart);
 
-    var chart = barchart().mname("sv_bar").margin(240).MValue("v");
+    var chart = barchart().mname("sv_bar").margin(190).MValue("v");
     d3.select("#chart1").datum(genData).call(chart);
 
     chart = linechart().mname("sv").margin(0).MValue("v");

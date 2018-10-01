@@ -7,8 +7,8 @@ function topChart() {
             left: 5
         },
         width = 920,
-        height = 300,
-        Bheight = 320;
+        height = 250,
+        Bheight = 270;
 
     var barHeight  = 60;
     var yyyymmdd = d3.time.format("%Y-%m-%d");

@@ -440,12 +440,12 @@ path.line{
     display: none;
     width: auto;
     height: auto;
-    min-width: 310px;
+    min-width: 325px;
     min-height: 115px;    
     border: 0 none;        
     background-color: rgba(0,0,0,0.2);
     color: white;
-    font: 13px sans-serif;
+    font: 12px sans-serif;
     padding: 8px 20px;
     text-align: left;
     left: 50%;

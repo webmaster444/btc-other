@@ -175,9 +175,21 @@ function topChart() {
                 $('#huClose').html("Close: "+ commaFormat(genData[index].c));
                 $('#huHigh').html("High: "+ commaFormat(genData[index].h));
                 $('#huLow').html("Low: "+ commaFormat(genData[index].l));
-                $('#huVolume').html("Volume: "+ kFormat(genData[index].v));
-                $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
-                $('#huSocial').html("Negative Tweets: "+ genData[index].nv);
+                $('#huVolume').html("Volume: "+ kFormat(genData[index].v));            
+                if(MValue=='v'){
+                    $('#huSocial').html("Social Volume: "+ genData[index]['v']);    
+                    $('#huSocialVolume').html("");
+                }else if(MValue=="ps"){
+                    $('#huSocial').html("% Positive Sentiment: "+ genData[index]['ps'] * 100 + '%');    
+                    $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
+                }else if(MValue =="nv"){
+                    $('#huSocial').html("Negative Tweets: "+ genData[index][MValue]);    
+                    $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
+                }else if(MValue =="pv"){
+                    $('#huSocial').html("Positive Tweets: "+ genData[index][MValue]);    
+                    $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
+                }
+                
                 $('.toolTip').show();
                 x_move_wrapper.select('rect').attr('x',x(val)).attr('y',0).attr('width',barwidth).attr('height',height);                
               }

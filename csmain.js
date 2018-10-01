@@ -7,7 +7,7 @@ var endDomain = Date.parse(endDate);
 var startDomain = Date.parse(startDate);
 var timestampduration = 0;
 var interval='hour';
-
+var topY;
 var TCount = {
     "1w": {"day":8,"hour":24 * 7},
     "1m": {"day":30,"hour": 24 * 30},
@@ -76,7 +76,7 @@ function mainjs() {
 }
 
 function displayCS() {
-    var chart1 = topChart().Bheight(250);
+    var chart1 = topChart().Bheight(250).MValue('v');
     d3.select("#chart1").call(chart1);
 
     var chart2 = bottomChart().Bheight(250);
@@ -85,23 +85,20 @@ function displayCS() {
     var chart = barchart().mname("tv").margin(190).MValue("tv");
     d3.select("#chart2").datum(genData).call(chart);
 
-    var chart = barchart().mname("sv_bar").margin(190).MValue("v");
-    d3.select("#chart1").datum(genData).call(chart);
-
     chart = linechart().mname("sv").margin(0).MValue("v");
     d3.select("#chart1").datum(genData).call(chart);
 
-    chart = linechart().mname("ps").margin(0).MValue("ps");
-    d3.select("#chart1").datum(genData).call(chart);
+    // chart = linechart().mname("ps").margin(0).MValue("ps");
+    // d3.select("#chart1").datum(genData).call(chart);
 
-    chart = linechart().mname("pv").margin(0).MValue("pv");
-    d3.select("#chart1").datum(genData).call(chart);
+    // chart = linechart().mname("pv").margin(0).MValue("pv");
+    // d3.select("#chart1").datum(genData).call(chart);
 
-    chart = linechart().mname("nv").margin(0).MValue("nv");
-    d3.select("#chart1").datum(genData).call(chart);
+    // chart = linechart().mname("nv").margin(0).MValue("nv");
+    // d3.select("#chart1").datum(genData).call(chart);
 
-    chart = linechart().mname("tv").margin(0).MValue("tv");
-    d3.select("#chart1").datum(genData).call(chart);
+    // chart = linechart().mname("tv").margin(0).MValue("tv");
+    // d3.select("#chart1").datum(genData).call(chart);
 
     chart = emachart().mname("ema12").margin(0);
     d3.select("#chart1").datum(ema12).call(chart);
@@ -254,18 +251,22 @@ function updateDropDown(option){
     switch(option){
         case "sv":
         $("#linechart-stat .stats-txt").html('Social Volume');
+        $('#topchart_title').html('Btc Social Volume');
         break;
         case "ps":
         $("#linechart-stat .stats-txt").html('% Positive Sentiment');
+        $('#topchart_title').html('BTC % Positive Sentiment');
         break;
         case "pv":
         $("#linechart-stat .stats-txt").html('Positive Tweets');
+        $('#topchart_title').html('Btc Positive Tweets');
         break;
         case "nv":
         $("#linechart-stat .stats-txt").html('Negative Tweets');
+        $('#topchart_title').html('Btc Negative Tweets');
         break;
         case "1w":
-        $("#duration-stat .stats-txt").html(option);
+        $("#duration-stat .stats-txt").html(option);        
         break;        
         case "2w":
         $("#duration-stat .stats-txt").html(option);
@@ -287,12 +288,38 @@ function updateDropDown(option){
 function updateTopChart(option){
     switch(option){
         case "sv":
+            $("#chart1").empty();
+            var chart1 = topChart().Bheight(250).MValue('v');
+            d3.select("#chart1").call(chart1);
+            chart = linechart().mname("ps").margin(0).MValue("v");
+            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "ps":
-        break;
+            $("#chart1").empty();
+            var chart1 = topChart().Bheight(250).MValue('ps');
+            d3.select("#chart1").call(chart1);
+            chart = linechart().mname("ps").margin(0).MValue("ps");
+            d3.select("#chart1").datum(genData).call(chart);
+            var chart = barchart().mname("sv_bar").margin(190).MValue("v");
+            d3.select("#chart1").datum(genData).call(chart);
+            break;
         case "pv":
+            $("#chart1").empty();
+            var chart1 = topChart().Bheight(250).MValue('pv');
+            d3.select("#chart1").call(chart1);
+            chart = linechart().mname("pv").margin(0).MValue("pv");
+            d3.select("#chart1").datum(genData).call(chart);
+            var chart = barchart().mname("sv_bar").margin(190).MValue("v");
+            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "nv":
+            $("#chart1").empty();
+            var chart1 = topChart().Bheight(250).MValue('nv');
+            d3.select("#chart1").call(chart1);
+            chart = linechart().mname("pv").margin(0).MValue("nv");
+            d3.select("#chart1").datum(genData).call(chart);
+            var chart = barchart().mname("sv_bar").margin(190).MValue("v");
+            d3.select("#chart1").datum(genData).call(chart);
         break;
     }
 };

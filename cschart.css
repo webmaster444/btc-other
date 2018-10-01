@@ -263,10 +263,6 @@ rect.pane{
     pointer-events: all;
 }
 
-.linechart_wrapper{
-    display: none;
-}
-
 .sv.linechart_wrapper{
     display: block;
 }
@@ -496,4 +492,21 @@ path.line{
 }
 .study.ema12.active{
     color: #07b0bb;
+}
+
+.chart_wrapper{
+    position: relative;
+}
+
+.chart_wrapper .stx-panel-title{
+    position: absolute;
+    color: #468fd2;
+    box-shadow: 0px 1px 1px rgba(0,0,0,0.8);
+    text-align: left;
+    text-transform: uppercase;
+    padding: 0 10px 0 10px;
+    line-height: 22px;
+    font-size: 12px;
+    left: 10px;
+    top: 10px;
 }

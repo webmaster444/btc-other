@@ -258,7 +258,7 @@ function bottomChart() {
                 $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
                 $('#huSocial').html("Negative Tweets: "+ genData[index].nv);
                 $('.toolTip').show();
-                x_move_wrapper.select('rect').attr('x',x(val)).attr(y,0).attr('width',barwidth).attr('height',height); 
+                x_move_wrapper.select('rect').attr('x',x(val)).attr('y',0).attr('width',barwidth).attr('height',height); 
               }
 
             // function zoomed() {                

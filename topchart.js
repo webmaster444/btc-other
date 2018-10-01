@@ -24,12 +24,19 @@ function topChart() {
         }
         return c;
     }
+    csrender.MValue = function(value) {
+        if (!arguments.length) return MValue;
+        MValue = value;
+        return csrender;
+    };
+
     function csrender(selection) {
         selection.each(function() {
             var parseDate = d3.time.format("%d");            
             var x = d3.scale.ordinal().domain(genData.map(function(d){return d.dt})).rangeRoundBands([0,width],.1);              
             // y axes for OHLC chart
-            var y = d3.scale.linear().rangeRound([height, 0]);
+            // var y = d3.scale.linear().rangeRound([height, 0]);
+            topY = d3.scale.linear().rangeRound([height, 0]);
             var pan_y = d3.scale.linear().rangeRound([height, 0]);
 
             var zoom = d3.behavior.zoom()
@@ -50,7 +57,7 @@ function topChart() {
             var xAxis = d3.svg.axis().scale(x);            
 
             var yAxis = d3.svg.axis()
-                .scale(y)
+                .scale(topY)
                 .ticks(Math.floor(height / 50));
             
             // var panyAxis = d3.svg.axis()
@@ -64,7 +71,7 @@ function topChart() {
                 });
 
             
-            y.domain(d3.extent(genData, function(d) {return d['v'];})).nice();
+            topY.domain(d3.extent(genData, function(d) {return d[MValue];})).nice();
             
             var barwidth = x.rangeBand();
 
@@ -108,8 +115,8 @@ function topChart() {
                 // .call(yAxis.orient("left").tickFormat("").tickSize(width));            
                 .call(yAxis.orient("left").tickSize(0));                    
             
-            var dotline = svg.append('line').attr('class','dotted_line').attr('x1',0).attr('y1',(y(genData[genData.length - 1].v) - 7)).attr('x2',(width-7)).attr('y2',(y(genData[genData.length - 1].v) - 7));
-            var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (y(genData[genData.length - 1].v) - 7) + ")").style('display','none');
+            var dotline = svg.append('line').attr('class','dotted_line').attr('x1',0).attr('y1',(topY(genData[genData.length - 1][MValue]) - 7)).attr('x2',(width-7)).attr('y2',(topY(genData[genData.length - 1][MValue]) - 7));
+            var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][MValue]) - 7) + ")").style('display','none');
 
             focus_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
             focus_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'focus_indicator');
@@ -154,8 +161,13 @@ function topChart() {
                 var eachBand = x.rangeBand();
                 var index = Math.round((d3.mouse(this)[0] / eachBand));                                                
                 var val = x.domain()[index];
-                var y0 = y.invert(d3.mouse(this)[1]);
-                focus_g.select("text").text(y0.toFixed(0));
+                var y0 = topY.invert(d3.mouse(this)[1]);
+                if(MValue!='ps'){
+                    focus_g.select("text").text(y0.toFixed(0));    
+                }else{
+                    focus_g.select("text").text(y0.toFixed(2));    
+                }
+                
                 focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1]-7) + ")");
                 y_line.attr('y1',d3.mouse(this)[1]).attr('y2',d3.mouse(this)[1]);                
                 $('#huDate').html( yyyymmdd( new Date(genData[index].Date)));
@@ -167,7 +179,7 @@ function topChart() {
                 $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
                 $('#huSocial').html("Negative Tweets: "+ genData[index].nv);
                 $('.toolTip').show();
-                x_move_wrapper.select('rect').attr('x',x(val)).attr(y,0).attr('width',barwidth).attr('height',height);                
+                x_move_wrapper.select('rect').attr('x',x(val)).attr('y',0).attr('width',barwidth).attr('height',height);                
               }
 
             // function zoomed() {                

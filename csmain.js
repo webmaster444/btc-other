@@ -227,22 +227,14 @@ $(document).on("change", "#period", function() {
     $('#checkboxes2 input[type="checkbox"]').prop('checked', false);
 });
 
-$('.option a').click(function(){
-    console.log($(this).next());
-    $(this).toggleClass('active');
-    $('.option ul').addClass('hide');
-    $(this).next().toggleClass('hide');
-})
-
-$('.option a').mouseover(function(){
-    $(this).addClass('active');
-});
-
-$('.option a').mouseout(function(){
-   $(this).removeClass('active'); 
-})
-
-$('.option ul li').mouseover(function(){
-    $('.option ul li').removeClass('active');
-    $(this).addClass('active');
+$('.option a').click(function(){    
+    $(this).toggleClass('active');    
+    if($(this).hasClass('active')){
+        $('.option ul').addClass('hide');
+        $(".option a").not($(this)).removeClass('active');
+        $(this).next().removeClass('hide');
+    }else{
+        $(this).next().addClass('hide');    
+    }
+    
 })

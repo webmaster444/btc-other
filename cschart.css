@@ -373,15 +373,18 @@ path.line{
     background-color: #40434c;
     z-index: 9999;
 }
+.option ul li:hover{
+    background-color: rgba(255,255,255,0.1);
+}
 .option ul li{
     list-style-type: none;
-    padding: 3px;
+    padding: 6px;
     text-align: center;
-    height: 1.5rem;
-    line-height: 1.5rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
-
+.option a:hover{
+    background-color: #40434c;
+}
 .option a{
     padding:6px 15px;
     display: inline-block;    

@@ -123,12 +123,14 @@ function calcema(period, data) {
     var tmp = new Object;
     tmp['dt'] = data[0]['dt'];
     tmp['ema'] = isma;
+    tmp['Date'] = Date.parse(data[0]['dt']);
 
     emares.push(tmp);
 
     for (var i = 1; i < data.length; i++) {
         var tmp_arr = new Object;
         tmp_arr['dt'] = data[i]['dt'];
+        tmp_arr['Date'] = Date.parse(tmp_arr['dt']);
         var tmp_ema = (data[i]['c'] - emares[i - 1]['ema']) * multiplier + emares[i - 1]['ema'];
         tmp_arr['ema'] = tmp_ema;
         emares.push(tmp_arr);

@@ -6,10 +6,10 @@ function emachart() {
   function emalinerender(selection) {    
     selection.each(function(data) {
   
-      // var x = d3.time.scale()
-      //     .domain([startDomain, endDomain])
-      //     .range([width / genData.length / 2, (width - width / genData.length / 2 )]).nice();   
-      var x = d3.scale.ordinal().domain(genData.map(function(d){return d.dt})).rangeBands([0,width]);   
+      var x = d3.time.scale()
+          .domain([startDomain, endDomain])
+          .range([width / 8 / 2, (width - width / 8 / 2 )]);
+      
       var y = d3.scale.linear()
           .rangeRound([height, 0]);
       
@@ -26,12 +26,11 @@ function emachart() {
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
       
       var new1_genData = data.filter(function(d){                                        
-          if(d.Date > startDomain && d.Date <endDomain){
+          if(d.Date > startDomain && d.Date <= endDomain){
               return d;
           }
       });        
       y.domain(d3.extent(data, function(d) { return d.ema; })).nice();
-
   
       var xtickdelta   = Math.ceil(60/(width/data.length))
       xAxis.tickValues(x.domain().filter(function(d, i) { return !((i+Math.floor(xtickdelta/2)) % xtickdelta); }));
@@ -39,14 +38,10 @@ function emachart() {
       svg.append("g")
           .attr("class", "axis yaxis")
           .attr("transform", "translate(" + width + ",0)")
-          .call(yAxis.orient("right").tickFormat("").tickSize(0));
-
-      var barwidth    = x.rangeBand();
-      // var fillwidth   = (Math.floor(barwidth*0.9)/2)*2+1;
-      // var bardelta    = Math.round((barwidth-fillwidth)/2);  
-
+          .call(yAxis.orient("right").tickFormat("").tickSize(0));    
+      
       var valueline = d3.svg.line()
-      .x(function(d) { return x(d.dt) + barwidth /2; })
+      .x(function(d) { return x(d.Date)})
       .y(function(d) { return y(d.ema); })
       .interpolate('basis');    
   

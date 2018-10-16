@@ -267,13 +267,16 @@ rect.pane{
     display: block;
 }
 
-g.sticks,g.candles, g.volumebar{
+g.sticks,g.candles, g.volumebar, g.sv_barbar{
     clip-path: url(#clip);
 }
 path.line{
     clip-path: url(#clip);
 }
 
+g.tvbar{
+    clip-path: url(#clip2);
+}
 #radioes2 label.active{font-weight: 700;color: #2f2681;text-decoration: underline;}
 .list-inline{
     text-align: left;

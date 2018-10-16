@@ -20,7 +20,10 @@ function barchart() {
                 }
             });
             
-            var x = d3.scale.ordinal().domain(new1_genData.map(function(d){return d.Date})).rangeBands([0,width]);                                        
+            // var x = d3.scale.ordinal().domain(new1_genData.map(function(d){return d.Date})).rangeBands([0,width]);   
+            var x = d3.time.scale()
+                .domain([startDomain, endDomain])
+                .range([width / 8 / 2, (width - width / 8 / 2 )]);                                      
             var y = d3.scale.linear()
                 .rangeRound([height, 0]);
 
@@ -44,10 +47,10 @@ function barchart() {
                 .attr("transform", "translate(" + width + ",0)")
                 .call(yAxis.orient("right").tickFormat("").tickSize(0));
             
-            var fillwidth = x.rangeBand();            
+            var barwidth = width / 8;            
 
             var mbar = svg.selectAll("." + mname + "bar")
-                .data([new1_genData])
+                .data([data])
                 .enter().append("g")
                 .attr("class", mname + "bar");
 
@@ -58,7 +61,7 @@ function barchart() {
                 .enter().append("rect")
                 .attr("class", mname + "fill")
                 .attr("x", function(d) {
-                    return x(d.Date);
+                    return x(d.Date) - barwidth / 2;
                 })
                 .attr("y", function(d) {                                    
                     return y(d[MValue]);
@@ -69,7 +72,7 @@ function barchart() {
                 .attr("height", function(d) {
                     return y(0) - y(d[MValue]);
                 })
-                .attr("width", fillwidth);
+                .attr("width", barwidth);
         });
     } // barrender
     barrender.mname = function(value) {

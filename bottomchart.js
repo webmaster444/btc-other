@@ -71,8 +71,7 @@ function bottomChart() {
                 })]).nice();
 
             // y.domain([minimal, maximal]).nice();
-
-            // var barwidth = width / genData.length;
+        
 
             var tmp_divider = TCount[period][interval];             
             var barwidth = width / 8;
@@ -80,10 +79,6 @@ function bottomChart() {
             var candlewidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;            
             var delta = Math.round((barwidth - candlewidth) / 2);
 
-            var valuelinepv = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['PV']);});
-            var valuelinetv = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['TV']);});
-            var valuelinenv = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['NV']);});
-            var valuelineps = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['PS']);});
             var valuelineema12 = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['ema']);});
             var valuelineema26 = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['ema']);});
 
@@ -93,7 +88,7 @@ function bottomChart() {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         svg.append("defs").append("clipPath")
-            .attr("id", "clip")
+            .attr("id", "clip2")
             .append("rect")
             .attr("width", width)
             .attr("height", height);
@@ -238,8 +233,7 @@ function bottomChart() {
                 })
                 .on("mousemove", mousemove)
                 .call(zoom).on("wheel.zoom", null);
-            
-            console.log(genData);
+                        
             function mousemove() {                
                 var x0 = x.invert(d3.mouse(this)[0]);
                 var y0 = y.invert(d3.mouse(this)[1]);
@@ -274,18 +268,18 @@ function bottomChart() {
 
               }
 
-            function zoomed() {   
-                console.log('here');
+            function zoomed() {                   
                 var vis_startDomain = Date.parse(x.domain()[0]);
                 var vis_endDomain = Date.parse(x.domain()[1]);
                 svg.select(".xaxis").call(xAxis);                
                          
-
                 var new_genData = genData.filter(function(d){                                        
-                        if(d.Date > vis_startDomain && d.Date <vis_endDomain){
+                        if(d.Date > vis_startDomain && d.Date <=vis_endDomain){
                             return d;
                         }
                     });
+
+                console.log(new_genData);
 
                 pan_y.domain([d3.min(new_genData, function(d) {
                     return d.l;
@@ -326,46 +320,20 @@ function bottomChart() {
                 });;
 
                 bar_y.domain([0, d3.max(new_genData, function(d) {
-                    return d["Volume"];
+                    return d["v"];
                 })]).nice();
                 
                 // d3.selectAll('.volume').data(genData)
                 d3.selectAll('.volume').data(genData).attr("x", function(d) {
-                    return x(d.Date) - candlewidth/2
+                    return x(d.Date) - barwidth / 2;
                 }).attr("y", function(d) {                    
-                    return bar_y(d['Volume']);
+                    return bar_y(d['v']);
                 }).attr("height", function(d) {                    
-                    return bar_y(0) - bar_y(d['Volume']);                    
+                    return bar_y(0) - bar_y(d['v']);                    
                 });
 
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['PV'];})).nice();
-                d3.selectAll(".pvline")                     
-                    .attr("d", valuelinepv(new_genData));
-                
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['PS'];})).nice();
-                d3.selectAll(".psline")                     
-                    .attr("d", valuelineps(new_genData));
-                
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['TV'];})).nice();
-                d3.selectAll(".tvline")                     
-                    .attr("d", valuelinetv(new_genData));
-                
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['NV'];})).nice();
-                d3.selectAll(".nvline")                     
-                    .attr("d", valuelinenv(new_genData));
-
-
-                // tmp_y.domain(d3.extent(genData, function(d) {return d['PS'];})).nice();
-                // d3.selectAll(".psline").attr("d", valuelineps(genData));
-
-                // tmp_y.domain(d3.extent(genData, function(d) {return d['TV'];})).nice();
-                // d3.selectAll(".tvline").attr("d", valuelinetv(genData));
-
-                // tmp_y.domain(d3.extent(genData, function(d) {return d['NV'];})).nice();
-                // d3.selectAll(".nvline").attr("d", valuelinenv(genData));
-
                 var new_ema12 = ema12.filter(function(d){                                        
-                        if(d.Date > vis_startDomain && d.Date <vis_endDomain){
+                        if(d.Date > vis_startDomain && d.Date <=vis_endDomain){
                             return d;
                         }
                     });
@@ -377,7 +345,7 @@ function bottomChart() {
                 // d3.selectAll(".ema12line").attr("d", valuelineema12(ema12));
 
                 var new_ema26 = ema26.filter(function(d){                                        
-                        if(d.Date > vis_startDomain && d.Date <vis_endDomain){
+                        if(d.Date > vis_startDomain && d.Date <=vis_endDomain){
                             return d;
                         }
                     });

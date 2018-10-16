@@ -13,21 +13,19 @@ function barchart() {
     var MValue = "v";
 
     function barrender(selection) {        
-        selection.each(function(data) {                        
-            var x = d3.scale.ordinal().domain(genData.map(function(d){return d.dt})).rangeRoundBands([0,width],0.1);                
-
-            var zoom = d3.behavior.zoom()
-                .x(x)
-                .xExtent(d3.extent(genData, function(d) {
-                    return d.dt;
-                }));
-
+        selection.each(function(data) {            
+            var new1_genData = data.filter(function(d){                                        
+                if(d.Date >= startDomain && d.Date <=endDomain){
+                    return d;
+                }
+            });
+            
+            var x = d3.scale.ordinal().domain(new1_genData.map(function(d){return d.Date})).rangeBands([0,width]);                                        
             var y = d3.scale.linear()
                 .rangeRound([height, 0]);
 
             var xAxis = d3.svg.axis()
-                .scale(x)
-                .tickFormat("");
+                .scale(x);                
 
             var yAxis = d3.svg.axis()
                 .scale(y)
@@ -35,13 +33,7 @@ function barchart() {
 
             var svg = d3.select(this).select("svg")
                 .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-            var new1_genData = data.filter(function(d){                                        
-                    if(d.Date > startDomain && d.Date <endDomain){
-                        return d;
-                    }
-                });
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");            
                         
             y.domain([0, d3.max(data, function(d) {                
                 return d["v"];
@@ -51,17 +43,11 @@ function barchart() {
                 .attr("class", "axis yaxis")
                 .attr("transform", "translate(" + width + ",0)")
                 .call(yAxis.orient("right").tickFormat("").tickSize(0));
-
-            // var barwidth = width / genData.length;
-            var tmp_divider = TCount[period][interval];
-            var barwidth = width / tmp_divider;
-
-            // var fillwidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;        
-            var fillwidth = x.rangeBand();
-            var bardelta = Math.round((barwidth - fillwidth) / 2);            
+            
+            var fillwidth = x.rangeBand();            
 
             var mbar = svg.selectAll("." + mname + "bar")
-                .data([data])
+                .data([new1_genData])
                 .enter().append("g")
                 .attr("class", mname + "bar");
 
@@ -72,7 +58,7 @@ function barchart() {
                 .enter().append("rect")
                 .attr("class", mname + "fill")
                 .attr("x", function(d) {
-                    return x(d.dt);
+                    return x(d.Date);
                 })
                 .attr("y", function(d) {                                    
                     return y(d[MValue]);

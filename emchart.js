@@ -41,12 +41,12 @@ function emachart() {
           .attr("transform", "translate(" + width + ",0)")
           .call(yAxis.orient("right").tickFormat("").tickSize(0));
 
-      // var barwidth    = x.rangeBand();
+      var barwidth    = x.rangeBand();
       // var fillwidth   = (Math.floor(barwidth*0.9)/2)*2+1;
       // var bardelta    = Math.round((barwidth-fillwidth)/2);  
 
       var valueline = d3.svg.line()
-      .x(function(d) { return x(d.dt); })
+      .x(function(d) { return x(d.dt) + barwidth /2; })
       .y(function(d) { return y(d.ema); })
       .interpolate('basis');    
   

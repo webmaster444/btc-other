@@ -1,4 +1,4 @@
-function linechart() {
+function areachart() {
 
     var margin = {
             top: 300,
@@ -7,9 +7,11 @@ function linechart() {
             left: 5
         },
         width = 920,
-        height = 240,
+        height = 260,
         mname = "mbar1";
 
+    var nv_color = '#B95F61';
+    var pv_color = '#597356';
     var MValue = "PV";
 
     function linerender(selection) {
@@ -33,7 +35,7 @@ function linechart() {
 
             var svg = d3.select(this).select("svg")
                 .append("g")
-                .attr('class', 'linechart_wrapper ' + mname)
+                .attr('class', 'areachart_wrapper ' + mname)
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
             
             var new1_genData = data.filter(function(d){                                        
@@ -44,7 +46,7 @@ function linechart() {
 
             y.domain(d3.extent(data, function(d) {
                 return d[MValue];
-            })).nice();
+            }));
 
 
             var xtickdelta = Math.ceil(60 / (width / data.length))
@@ -70,6 +72,12 @@ function linechart() {
                     return y(d[MValue]);
                 }).interpolate('basis');
 
+            var  area = d3.svg.area()
+    .x(function(d) { return x(d.dt)+barwidth/2; })
+    .y0(height)
+    .y1(function(d) { return y(d[MValue]); })
+    .interpolate('basis');
+
                     var defs = svg.append("defs");
 
         var gradients = defs.append('linearGradient').attr('id','path_grad').attr("x1", "0%")
@@ -80,7 +88,14 @@ function linechart() {
         gradients.append("stop")
             .attr('class', 'start')
             .attr("offset", '0%')            
-            .attr("stop-color", "#597356")
+            .attr("stop-color", function(){
+                if(MValue=="pv"){
+                    return pv_color;
+                }else if(MValue=="nv"){
+                    return nv_color;
+                }
+                return nv_color;
+            })
             .attr("stop-opacity", 1);
         gradients.append("stop")
             .attr('class', 'end')
@@ -90,7 +105,7 @@ function linechart() {
 
             svg.append("path")
                 .attr("class", mname + "line line")
-                .attr("d", valueline(data))
+                .attr("d", area(data))
                 .attr("fill", "#path_grad");
 
             var indicator_g = svg.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width - 10) + "," + (y(data[data.length - 1][MValue]) - 7) + ")");

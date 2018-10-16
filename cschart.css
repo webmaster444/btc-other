@@ -510,3 +510,7 @@ path.line{
     left: 10px;
     top: 10px;
 }
+
+.areachart_wrapper path{
+    fill:url('#path_grad');
+}

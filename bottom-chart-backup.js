@@ -10,6 +10,26 @@ function bottomChart() {
         height = 250,
         Bheight = 270;
 
+    function monthDay(d){
+        var timeFormat = d3.time.format('%e');
+        var timeFormat1 = d3.time.format('%b');
+        var c = timeFormat(new Date(d));
+        if(c == 1){
+            return timeFormat1(new Date(d));
+        }
+        return c;
+    }
+
+    function month1Day(d){
+        var timeFormat = d3.time.format.utc('%e');
+        var timeFormat1 = d3.time.format.utc('%b');
+        var c = timeFormat(new Date(d));
+        if(c == 1){
+            return timeFormat1(new Date(d));
+        }
+        return c;
+    }
+
     var barHeight  = 60;
     var yyyymmdd = d3.time.format("%Y-%m-%d");
     var commaFormat = d3.format(",");
@@ -17,20 +37,30 @@ function bottomChart() {
 
     function csrender(selection) {
         selection.each(function() {
-            var parseDate = d3.time.format("%d-%b");
-            var x = d3.time.scale()
-                .domain([startDomain, endDomain])
-                .range([width / 8 / 2, (width - width / 8 / 2 )]);            
+            var new1_genData = genData.filter(function(d){                                        
+                if(d.Date >= startDomain && d.Date <endDomain){
+                    return d;
+                }
+            });
+                
+            console.log(new1_genData);
 
+            var xOrdinalScale = d3.scale.ordinal().domain(new1_genData.map(function(d){return d.Date})).rangeBands([0,width]);                
+            var ordinalScaleBand = xOrdinalScale.rangeBand();                        
+            var x = d3.time.scale()
+                .domain(d3.extent(new1_genData,function(d){ return d.Date;}))
+                .range([ordinalScaleBand/ 2, (width - ordinalScaleBand / 2 )]);  
+                console.log(x.domain());
+                console.log(xOrdinalScale.domain());
             // y axes for OHLC chart
             var y = d3.scale.linear().rangeRound([height, 0]);
             var pan_y = d3.scale.linear().rangeRound([height, 0]);
 
-            var zoom = d3.behavior.zoom()
+            var zoom = d3.behavior.zoom()        
                 .x(x)
-                .xExtent(d3.extent(genData, function(d) {                    
+                .xExtent(d3.extent(genData, function(d) {                       
                     return d.Date
-                }))               
+                }))                   
                 .on("zoom", zoomed);
             
             var bisectDate = d3.bisector(function(d) { return d.Date; }).left;
@@ -48,7 +78,8 @@ function bottomChart() {
             // y axis for bar chart pan functionality
             var bar_y = d3.scale.linear().rangeRound([barHeight, 0]);
 
-            var xAxis = d3.svg.axis().scale(x);            
+            var xAxis = d3.svg.axis().scale(xOrdinalScale);            
+            var xAxis1 = d3.svg.axis().scale(x);            
 
             var yAxis = d3.svg.axis()
                 .scale(y)
@@ -57,16 +88,10 @@ function bottomChart() {
             // var panyAxis = d3.svg.axis()
             //     .scale(pan_y)
             //     .ticks(Math.floor(height / 50));
-
-            var new1_genData = genData.filter(function(d){                                        
-                    if(d.Date > startDomain && d.Date <endDomain){
-                        return d;
-                    }
-                });
-
-            y.domain([d3.min(new1_genData, function(d) {
+            
+            y.domain([d3.min(genData, function(d) {
                     return d.l;
-                }), d3.max(new1_genData, function(d) {
+                }), d3.max(genData, function(d) {
                     return d.h;
                 })]).nice();
 
@@ -76,32 +101,30 @@ function bottomChart() {
 
             var tmp_divider = TCount[period][interval];             
             var barwidth = width / 8;
-            
+            // var barwidth = 10;
+                        
+            // var candlewidth = width / 8;
+            // // var candlewidth = 8;
+            // var delta = Math.round((barwidth - candlewidth) / 2);        
             var candlewidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;            
             var delta = Math.round((barwidth - candlewidth) / 2);
 
-            var valuelinepv = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['PV']);});
-            var valuelinetv = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['TV']);});
-            var valuelinenv = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['NV']);});
-            var valuelineps = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['PS']);});
-            var valuelineema12 = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['ema']);});
-            var valuelineema26 = d3.svg.line().x(function(d) {return x(d.Date);}).y(function(d) {return tmp_y(d['ema']);});
 
             d3.select(this).select("svg").remove();
             var svg = d3.select(this).append("svg").attr('viewBox','0 0 '+(width + margin.left + margin.right) + ', '+ (Bheight + margin.top + margin.bottom))
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        svg.append("defs").append("clipPath")
-            .attr("id", "clip")
-            .append("rect")
-            .attr("width", width)
-            .attr("height", height);
-
             svg.append("g")
                 .attr("class", "axis xaxis")
                 .attr("transform", "translate(0," + height + ")")
-                .call(xAxis.orient("bottom").ticks(7));            
+                .call(xAxis.orient("bottom").tickFormat(monthDay));            
+
+            svg.append("g")
+                .attr("class", "axis xaxis1")
+                .attr("transform", "translate(0," + (height+10) + ")")
+                .call(xAxis1.orient("bottom").tickFormat(month1Day))
+                .call(xAxis1.orient("bottom"));  
 
             svg.append("g")
                 .attr("class", "axis yaxis")
@@ -112,7 +135,7 @@ function bottomChart() {
                 .attr("class", "axis grid")
                 .attr("transform", "translate(" + width + ",0)")
                 // .call(yAxis.orient("left").tickFormat("").tickSize(width));            
-                .call(yAxis.orient("left").tickSize(width));            
+                .call(yAxis.orient("left").tickSize(0));            
 
             var bands = svg.selectAll(".bands")
                 .data([genData])
@@ -124,8 +147,8 @@ function bottomChart() {
                     return d;
                 })
                 .enter().append("rect")
-                .attr("x", function(d) {                    
-                    return x(d.Date) + Math.floor(barwidth / 2);
+                .attr("x", function(d) {                       
+                    return x(d.Date);
                 })
                 .attr("y", 0)
                 .attr("height", Bheight)
@@ -146,7 +169,7 @@ function bottomChart() {
                 })
                 .enter().append("rect")
                 .attr("x", function(d) {
-                    return x(d.Date);
+                    return x(d.Date)+candlewidth/2;
                 })
                 .attr("y", function(d) {
                     return y(d.h);
@@ -176,7 +199,7 @@ function bottomChart() {
                 })
                 .enter().append("rect")
                 .attr("x", function(d) {
-                    return x(d.Date) -candlewidth/2;
+                    return x(d.Date);
                 })
                 .attr("y", function(d) {
                     return y(d3.max([d.o, d.c]));
@@ -195,13 +218,14 @@ function bottomChart() {
                     return (d.o > d.c);
                 });
 
-            var indicator_g = svg.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width) + "," + (y(genData[genData.length - 1].c) - 7) + ")");
+            var indicator_g = svg.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width - 10) + "," + (y(genData[genData.length - 1].c) - 7) + ")");
 
             indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
             indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'ohlc_indicator');
             indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1].c.toFixed(0));
-
-            var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width) + "," + (y(genData[genData.length - 1].c) - 7) + ")").style('display','none');
+            
+            var dotline = svg.append('line').attr('class','dotted_line').attr('x1',0).attr('y1',(y(genData[genData.length - 1].c))).attr('x2',(width-7)).attr('y2',(y(genData[genData.length - 1].c) ));
+            var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (y(genData[genData.length - 1].c) - 7) + ")").style('display','none');
 
             focus_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
             focus_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'focus_indicator');
@@ -210,11 +234,11 @@ function bottomChart() {
             var x_move_wrapper = svg.append('g').attr('class','x_wrapper').style('display','none');
 
             var x_move_rect = x_move_wrapper.append("rect").attr("class",'x_move_rect')
-                            .attr("x", 0)
+                            .attr("x", -35)
                             .attr("y", 0)
                             .attr('rx',0)
-                            .attr("width", width/8)
-                            .attr("height", height);            
+                            .attr("width", barwidth)
+                            .attr("height", height - 3);            
 
             var x_line = svg.append('line').attr('class','x_grid_line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',height).style('display','none');
             var y_line = svg.append('line').attr('class','y_grid_line').attr('x1',0).attr('y1',0).attr('x2',width).attr('y2',0).style('display','none');
@@ -239,46 +263,39 @@ function bottomChart() {
                 .on("mousemove", mousemove)
                 .call(zoom).on("wheel.zoom", null);
             
-            console.log(genData);
-            function mousemove() {                
-                var x0 = x.invert(d3.mouse(this)[0]);
+            svg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+              function mousemove() {
+                var eachBand = xOrdinalScale.rangeBand();            
+                var index = Math.round((d3.mouse(this)[0] / eachBand));                                                
+                var val = x.domain()[index];
                 var y0 = y.invert(d3.mouse(this)[1]);
-            
-
-                var t = Date.parse(x0);
-                var s = new Date(t);                
-                var st = Date.parse(new Date(s.getFullYear(),s.getMonth(),s.getDate()));
-
-                var index = genData.find(function(item, i){                    
-                 if(item.Date === st){
-                 index = i;
-                 return i;
-                 }
-                });                
-                
-                focus_g.attr("transform", "translate(" + width + "," + (d3.mouse(this)[1]-7) + ")");
-                x_move_wrapper.attr('transform',"translate("+d3.mouse(this)[0]+","+0+")");
-                x_line.attr('x1',d3.mouse(this)[0]).attr('x2',d3.mouse(this)[0]);
-                y_line.attr('y1',d3.mouse(this)[1]).attr('y2',d3.mouse(this)[1]);                
                 focus_g.select("text").text(y0.toFixed(0));
-
-                $('#huDate').html( yyyymmdd( new Date(index.Date)));
-                $('#huOpen').html( "Open: "+commaFormat(index.o));
-                $('#huClose').html("Close: "+ commaFormat(index.c));
-                $('#huHigh').html("High: "+ commaFormat(index.h));
-                $('#huLow').html("Low: "+ commaFormat(index.l));
-                $('#huVolume').html("Volume: "+ kFormat(index.v));
-                $('#huSocialVolume').html("Social Volume: "+ kFormat(index.tv));
-                $('#huSocial').html("Negative Tweets: "+ index.nv);
+                focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1]-7) + ")");
+                y_line.attr('y1',d3.mouse(this)[1]).attr('y2',d3.mouse(this)[1]);                
+                $('#huDate').html( yyyymmdd( new Date(genData[index].Date)));
+                $('#huOpen').html( "Open: "+commaFormat(genData[index].o));
+                $('#huClose').html("Close: "+ commaFormat(genData[index].c));
+                $('#huHigh').html("High: "+ commaFormat(genData[index].h));
+                $('#huLow').html("Low: "+ commaFormat(genData[index].l));
+                $('#huVolume').html("Volume: "+ kFormat(genData[index].v));
+                $('#huSocialVolume').html("Social Volume: "+ kFormat(genData[index].tv));
+                $('#huSocial').html("Negative Tweets: "+ genData[index].nv);
                 $('.toolTip').show();
-
+                x_move_wrapper.select('rect').attr('x',xOrdinalScale(val)).attr('y',0).attr('width',barwidth).attr('height',height); 
               }
 
-            function zoomed() {   
-                console.log('here');
+            function zoomed() {         
+                console.log('func bot zoomed');
+
                 var vis_startDomain = Date.parse(x.domain()[0]);
                 var vis_endDomain = Date.parse(x.domain()[1]);
-                svg.select(".xaxis").call(xAxis);                
+                console.log(vis_startDomain)
+                svg.select(".xaxis1").call(xAxis1);                
                          
 
                 var new_genData = genData.filter(function(d){                                        
@@ -303,7 +320,7 @@ function bottomChart() {
                 svg.select(".grid").call(yAxis.orient("left").tickSize(width));       
 
                 svg.selectAll('.candle').data(genData).attr("x", function(d) {
-                    return x(d.Date) - candlewidth/2
+                    return xOrdinalScale(d.Date) - candlewidth/2
                 }).attr("y", function(d) {
                     return pan_y(d3.max([d.o, d.c]));
                 })
@@ -312,7 +329,7 @@ function bottomChart() {
                 });
 
                 svg.selectAll('.stick').data(genData).attr("x", function(d) {
-                    return x(d.Date)
+                    return xOrdinalScale(d.Date)
                 }).attr("y", function(d) {
                     return pan_y(d.h);
                 }).attr("class", function(d, i) {
@@ -326,67 +343,17 @@ function bottomChart() {
                 });;
 
                 bar_y.domain([0, d3.max(new_genData, function(d) {
-                    return d["Volume"];
+                    return d["tv"];
                 })]).nice();
                 
                 // d3.selectAll('.volume').data(genData)
                 d3.selectAll('.volume').data(genData).attr("x", function(d) {
-                    return x(d.Date) - candlewidth/2
+                    return xOrdinalScale(d.Date) - candlewidth/2
                 }).attr("y", function(d) {                    
-                    return bar_y(d['Volume']);
+                    return bar_y(d['tv']);
                 }).attr("height", function(d) {                    
-                    return bar_y(0) - bar_y(d['Volume']);                    
+                    return bar_y(0) - bar_y(d['tv']);                    
                 });
-
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['PV'];})).nice();
-                d3.selectAll(".pvline")                     
-                    .attr("d", valuelinepv(new_genData));
-                
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['PS'];})).nice();
-                d3.selectAll(".psline")                     
-                    .attr("d", valuelineps(new_genData));
-                
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['TV'];})).nice();
-                d3.selectAll(".tvline")                     
-                    .attr("d", valuelinetv(new_genData));
-                
-                tmp_y.domain(d3.extent(new_genData, function(d) {return d['NV'];})).nice();
-                d3.selectAll(".nvline")                     
-                    .attr("d", valuelinenv(new_genData));
-
-
-                // tmp_y.domain(d3.extent(genData, function(d) {return d['PS'];})).nice();
-                // d3.selectAll(".psline").attr("d", valuelineps(genData));
-
-                // tmp_y.domain(d3.extent(genData, function(d) {return d['TV'];})).nice();
-                // d3.selectAll(".tvline").attr("d", valuelinetv(genData));
-
-                // tmp_y.domain(d3.extent(genData, function(d) {return d['NV'];})).nice();
-                // d3.selectAll(".nvline").attr("d", valuelinenv(genData));
-
-                var new_ema12 = ema12.filter(function(d){                                        
-                        if(d.Date > vis_startDomain && d.Date <vis_endDomain){
-                            return d;
-                        }
-                    });
-
-                tmp_y.domain(d3.extent(new_ema12, function(d) {return d['ema'];})).nice();
-                d3.selectAll(".ema12line").attr("d", valuelineema12(ema12));    
-
-                // tmp_y.domain(d3.extent(ema12, function(d) {return d['ema'];})).nice();
-                // d3.selectAll(".ema12line").attr("d", valuelineema12(ema12));
-
-                var new_ema26 = ema26.filter(function(d){                                        
-                        if(d.Date > vis_startDomain && d.Date <vis_endDomain){
-                            return d;
-                        }
-                    });
-
-                tmp_y.domain(d3.extent(new_ema26, function(d) {return d['ema'];})).nice();
-                d3.selectAll(".ema26line").attr("d", valuelineema26(ema26));        
-
-                // tmp_y.domain(d3.extent(ema26, function(d) {return d['ema'];})).nice();
-                // d3.selectAll(".ema26line").attr("d", valuelineema26(ema26));
             }
 
         });

@@ -48,6 +48,10 @@ function bottomChart() {
             // y axis for bar chart pan functionality
             var bar_y = d3.scale.linear().rangeRound([barHeight, 0]);
 
+            bar_y.domain([0, d3.max(genData, function(d) {                
+                return d["tv"];
+            })]).nice();
+
             var xAxis = d3.svg.axis().scale(x);            
 
             var yAxis = d3.svg.axis()
@@ -72,7 +76,6 @@ function bottomChart() {
 
             // y.domain([minimal, maximal]).nice();
         
-
             var tmp_divider = TCount[period][interval];             
             var barwidth = width / 8;
             
@@ -86,6 +89,34 @@ function bottomChart() {
             var svg = d3.select(this).append("svg").attr('viewBox','0 0 '+(width + margin.left + margin.right) + ', '+ (Bheight + margin.top + margin.bottom))
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            //Bar Chart
+            var btm_bar_wrapper = svg.append('g').attr('class','btm_bar_wrapper').attr('transform','translate(0,190)');
+
+            var mbar = btm_bar_wrapper.selectAll(".tvbar")
+                .data([genData])
+                .enter().append("g")
+                .attr("class", "tvbar");
+
+            mbar.selectAll("rect")
+                .data(function(d) {
+                    return d;
+                })
+                .enter().append("rect")
+                .attr("class", "tvfill")
+                .attr("x", function(d) {
+                    return x(d.Date) - barwidth / 2;
+                })
+                .attr("y", function(d) {                                    
+                    return bar_y(d['tv']);
+                })
+                .attr("class", function(d, i) {
+                    return 'tv' + i + " volume";
+                })
+                .attr("height", function(d) {
+                    return bar_y(0) - bar_y(d['tv']);
+                })
+                .attr("width", barwidth);
 
         svg.append("defs").append("clipPath")
             .attr("id", "clip2")
@@ -101,13 +132,12 @@ function bottomChart() {
             svg.append("g")
                 .attr("class", "axis yaxis")
                 .attr("transform", "translate(" + width + ",0)")
-                .call(yAxis.orient("right").tickSize(0));
-
+                .call(yAxis.orient("right").tickSize(6));
+      
             svg.append("g")
                 .attr("class", "axis grid")
-                .attr("transform", "translate(" + width + ",0)")
-                // .call(yAxis.orient("left").tickFormat("").tickSize(width));            
-                .call(yAxis.orient("left").tickSize(width));            
+                .attr("transform", "translate(" + width + ",0)")                
+                .call(yAxis.orient("left").tickSize(0));
 
             var bands = svg.selectAll(".bands")
                 .data([genData])
@@ -271,15 +301,13 @@ function bottomChart() {
             function zoomed() {                   
                 var vis_startDomain = Date.parse(x.domain()[0]);
                 var vis_endDomain = Date.parse(x.domain()[1]);
-                svg.select(".xaxis").call(xAxis);                
+                d3.selectAll(".xaxis").call(xAxis);                
                          
                 var new_genData = genData.filter(function(d){                                        
                         if(d.Date > vis_startDomain && d.Date <=vis_endDomain){
                             return d;
                         }
-                    });
-
-                console.log(new_genData);
+                    });            
 
                 pan_y.domain([d3.min(new_genData, function(d) {
                     return d.l;

@@ -224,7 +224,10 @@ fieldset{
 .ema26line{stroke:#e29eda;}
 .psline{stroke:#8cc176;}
 .pvline{stroke:#8cc176;}
-.nvline{stroke:#fc7a7a;}
+.pvarea{
+    stroke: #8cc176;
+}
+.nvarea,.nvline{stroke:#fc7a7a;}
 .tvline{stroke:#9fb0ba;}
 .ipline{stroke:#FAEFBD;}
 
@@ -267,7 +270,7 @@ rect.pane{
     display: block;
 }
 
-g.sticks,g.candles, g.volumebar, g.sv_barbar{
+g.sticks,g.candles, g.volumebar, g.sv_barbar g.svbar{
     clip-path: url(#clip);
 }
 path.line{
@@ -471,7 +474,7 @@ g.tvbar{
 }
 
 
-.sv_barbar rect{
+.svbar rect{
     fill:#434753;
 }
 .tvbar rect{
@@ -516,4 +519,13 @@ g.tvbar{
 
 .areachart_wrapper path{
     fill:url('#path_grad');
+}
+.pvarea.area{
+    fill:url('#path_gradpv');   
+    fill-opacity: 0.5;
+}
+
+.nvarea.area{
+    fill:url('#path_gradnv');   
+    fill-opacity: 0.5;
 }

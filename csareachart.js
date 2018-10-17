@@ -48,8 +48,7 @@ function areachart() {
 
             y.domain(d3.extent(new1_genData, function(d) {
                 return d[MValue];
-            })).nice();
-            console.log(y.domain());
+            })).nice();            
 
             var xtickdelta = Math.ceil(60 / (width / data.length))
             xAxis.tickValues(x.domain().filter(function(d, i) {
@@ -67,7 +66,7 @@ function areachart() {
             .y1(function(d) { return y(d[MValue]); })
             .interpolate('basis');
 
-                    var defs = svg.append("defs");
+        var defs = svg.append("defs");
 
         var gradients = defs.append('linearGradient').attr('id','path_grad').attr("x1", "0%")
             .attr("x2", "0%")

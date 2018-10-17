@@ -89,23 +89,7 @@ function displayCS() {
     d3.select("#chart1").call(chart1);
 
     var chart2 = bottomChart().Bheight(250);
-    d3.select("#chart2").call(chart2);
-
-    var chart = barchart().mname("tv").margin(190).MValue("tv");
-    d3.select("#chart2").datum(genData).call(chart);
-
-    chart = linechart().mname("sv").margin(0).MValue("v");
-    d3.select("#chart1").datum(genData).call(chart);
-
-    chart = emachart().mname("ema12").margin(0);
-    d3.select("#chart1").datum(ema12).call(chart);
-
-    chart = emachart().mname("ema26").margin(0);
-    d3.select("#chart1").datum(ema26).call(chart);
-    
-    var chart = linechart().mname("ip").margin(0).MValue("ip");
-    d3.select("#chart1").datum(genData).call(chart);
-    
+    d3.select("#chart2").call(chart2);    
 }
 
 function calcema(period, data) {
@@ -288,74 +272,16 @@ function updateDropDown(option){
 function updateTopChart(option){
     switch(option){
         case "sv":
-            $("#chart1").empty();
-            var chart1 = topChart().Bheight(250).MValue('v');
-            d3.select("#chart1").call(chart1);
-            chart = linechart().mname("ps").margin(0).MValue("v");
-            d3.select("#chart1").datum(genData).call(chart);
-            chart = emachart().mname("ema12").margin(0);
-            d3.select("#chart1").datum(ema12).call(chart);
 
-            chart = emachart().mname("ema26").margin(0);
-            d3.select("#chart1").datum(ema26).call(chart);
-            
-            var chart = linechart().mname("ip").margin(0).MValue("ip");
-            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "ps":
-            $("#chart1").empty();
-            var chart1 = topChart().Bheight(250).MValue('ps');
-            d3.select("#chart1").call(chart1);
-            chart = linechart().mname("ps").margin(0).MValue("ps");
-            d3.select("#chart1").datum(genData).call(chart);
-            var chart = barchart().mname("sv_bar").margin(190).MValue("v");
-            d3.select("#chart1").datum(genData).call(chart);
-            chart = emachart().mname("ema12").margin(0);
-            d3.select("#chart1").datum(ema12).call(chart);
 
-            chart = emachart().mname("ema26").margin(0);
-            d3.select("#chart1").datum(ema26).call(chart);
-
-            var chart = linechart().mname("ip").margin(0).MValue("ip");
-            d3.select("#chart1").datum(genData).call(chart);
             break;
         case "pv":
-            $("#chart1").empty();
-            var chart1 = topChart().Bheight(250).MValue('pv');
-            d3.select("#chart1").call(chart1);            
 
-            chart = areachart().mname("pv").margin(0).MValue("pv");
-            d3.select("#chart1").datum(genData).call(chart);
-
-            var chart = barchart().mname("sv_bar").margin(190).MValue("v");
-            d3.select("#chart1").datum(genData).call(chart);
-            chart = emachart().mname("ema12").margin(0);
-            d3.select("#chart1").datum(ema12).call(chart);
-
-            chart = emachart().mname("ema26").margin(0);
-            d3.select("#chart1").datum(ema26).call(chart);
-            
-            var chart = linechart().mname("ip").margin(0).MValue("ip");
-            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "nv":
-            $("#chart1").empty();
-            var chart1 = topChart().Bheight(250).MValue('nv');
-            d3.select("#chart1").call(chart1);            
 
-            chart = areachart().mname("nv").margin(0).MValue("nv");
-            d3.select("#chart1").datum(genData).call(chart);
-
-            var chart = barchart().mname("sv_bar").margin(190).MValue("v");
-            d3.select("#chart1").datum(genData).call(chart);
-            chart = emachart().mname("ema12").margin(0);
-            d3.select("#chart1").datum(ema12).call(chart);
-
-            chart = emachart().mname("ema26").margin(0);
-            d3.select("#chart1").datum(ema26).call(chart);
-            
-            var chart = linechart().mname("ip").margin(0).MValue("ip");
-            d3.select("#chart1").datum(genData).call(chart);
         break;
         case "ema12":
             if($('.study.ema12').hasClass('active')){

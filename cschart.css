@@ -270,12 +270,13 @@ rect.pane{
     display: block;
 }
 
-g.sticks,g.candles, g.volumebar, g.sv_barbar g.svbar{
+g.sticks,g.candles, g.volumebar, g.sv_barbar, g.svbar,.pvarea,.nvarea{
     clip-path: url(#clip);
 }
 path.line{
     clip-path: url(#clip);
 }
+
 
 g.tvbar{
     clip-path: url(#clip2);

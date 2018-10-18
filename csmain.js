@@ -87,7 +87,7 @@ function mainjs() {
 function displayCS() {
     var chart1 = topChart().Bheight(250).MValue('v');
     d3.select("#chart1").call(chart1);
-
+    d3.select('.sv_line').classed('hide',false);
     var chart2 = bottomChart().Bheight(250);
     d3.select("#chart2").call(chart2);    
 }
@@ -270,18 +270,24 @@ function updateDropDown(option){
     }
 }
 function updateTopChart(option){
+    d3.selectAll('.line_wrapper').classed('hide',true);
+    d3.selectAll('.area_wrapper').classed('hide',true);
+    d3.selectAll('.top_bar_wrapper').classed('hide',true);
     switch(option){
         case "sv":
-
+            d3.selectAll('.sv_line').classed('hide',false);
         break;
         case "ps":
-
+            d3.selectAll('.ps_line').classed('hide',false);
+            d3.selectAll('.top_bar_wrapper').classed('hide',false);
             break;
         case "pv":
-
+            d3.selectAll('.pv_area').classed('hide',false);
+            d3.selectAll('.top_bar_wrapper').classed('hide',false);
         break;
         case "nv":
-
+            d3.selectAll('.nv_area').classed('hide',false);
+            d3.selectAll('.top_bar_wrapper').classed('hide',false);
         break;
         case "ema12":
             if($('.study.ema12').hasClass('active')){

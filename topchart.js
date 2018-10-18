@@ -133,33 +133,7 @@ function topChart() {
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            //Bar Chart
-            var top_bar_wrapper = svg.append('g').attr('class', 'top_bar_wrapper').attr('transform', 'translate(0,190)');
-
-            var mbar = top_bar_wrapper.selectAll(".svbar")
-                .data([genData])
-                .enter().append("g")
-                .attr("class", "svbar");
-
-            mbar.selectAll("rect")
-                .data(function(d) {
-                    return d;
-                })
-                .enter().append("rect")
-                .attr("class", "svfill")
-                .attr("x", function(d) {
-                    return x(d.Date) - barwidth / 2;
-                })
-                .attr("y", function(d) {
-                    return bar_y(d['v']);
-                })
-                .attr("class", function(d, i) {
-                    return 'sv' + i + " volume";
-                })
-                .attr("height", function(d) {
-                    return bar_y(0) - bar_y(d['v']);
-                })
-                .attr("width", barwidth);
+            
 
             svg.append("defs").append("clipPath")
                 .attr("id", "clip")
@@ -181,12 +155,13 @@ function topChart() {
                 .attr("class", "axis grid")
                 .attr("transform", "translate(" + width + ",0)")                       
                 .call(yAxis.orient("left").tickSize(0));
-
+            
+            drawBarChart('v','sv');
             drawLineChart('v', 'sv');
             drawLineChart('ps', 'ps');
             drawAreaChart('pv', 'pv');
-            drawAreaChart('nv', 'nv');
-
+            drawAreaChart('nv', 'nv');            
+            
             var dotline = svg.append('line').attr('class', 'dotted_line').attr('x1', 0).attr('y1', (topY(genData[genData.length - 1][MValue]) - 7)).attr('x2', (width - 7)).attr('y2', (topY(genData[genData.length - 1][MValue]) - 7));
             var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][MValue]) - 7) + ")").style('display', 'none');
 
@@ -313,7 +288,7 @@ function topChart() {
                 tmp_y.domain(d3.extent(new_genData, function(d) {
                     return d['pv'];
                 })).nice();
-                d3.selectAll(".pvline")
+                d3.selectAll(".pvarea")
                     .attr("d", valueareapv(genData));
 
                 tmp_y.domain(d3.extent(new_genData, function(d) {
@@ -331,9 +306,8 @@ function topChart() {
                 tmp_y.domain(d3.extent(new_genData, function(d) {
                     return d['nv'];
                 })).nice();
-                d3.selectAll(".nvline")
+                d3.selectAll(".nvarea")
                     .attr("d", valueareanv(genData));
-
 
 
                 var new_ema12 = ema12.filter(function(d) {
@@ -370,7 +344,7 @@ function topChart() {
                     return tmp_y(d[MValue]);
                 }).interpolate('basis');
 
-                var chart_wrapper = svg.append('g').attr('class','line_wrapper ' + mname +'_line');
+                var chart_wrapper = svg.append('g').attr('class','hide line_wrapper ' + mname +'_line');
                 
                 
                 chart_wrapper.append("path")
@@ -384,7 +358,35 @@ function topChart() {
                 indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', mname + '_indicator');
                 indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1][MValue].toFixed(2));
             }
+            function drawBarChart(MValue,mname){
+                //Bar Chart
+                var top_bar_wrapper = svg.append('g').attr('class', 'top_bar_wrapper hide').attr('transform', 'translate(0,190)');
 
+                var mbar = top_bar_wrapper.selectAll(".svbar")
+                    .data([genData])
+                    .enter().append("g")
+                    .attr("class", "svbar");
+
+                mbar.selectAll("rect")
+                    .data(function(d) {
+                        return d;
+                    })
+                    .enter().append("rect")
+                    .attr("class", "svfill")
+                    .attr("x", function(d) {
+                        return x(d.Date) - barwidth / 2;
+                    })
+                    .attr("y", function(d) {
+                        return bar_y(d[MValue]);
+                    })
+                    .attr("class", function(d, i) {
+                        return 'sv' + i + " volume";
+                    })
+                    .attr("height", function(d) {
+                        return bar_y(0) - bar_y(d[MValue]);
+                    })
+                    .attr("width", barwidth);
+            }
             function drawAreaChart(MValue, mname) {           
                 var defs = svg.append("defs");
 
@@ -421,7 +423,7 @@ function topChart() {
                     return tmp_y(d[MValue]);
                 }).interpolate('basis');
 
-                var chart_wrapper = svg.append('g').attr('class','area_wrapper ' + mname +'_area');
+                var chart_wrapper = svg.append('g').attr('class','hide area_wrapper ' + mname +'_area');
 
                 chart_wrapper.append("path")
                     .attr("class", mname + "area area")

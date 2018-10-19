@@ -16,7 +16,6 @@ function topChart() {
     var kFormat = d3.format('.2s');
     var nv_color = '#B95F61';
     var pv_color = '#31e41d';
-
     function monthDay(d) {
         var timeFormat = d3.time.format('%e');
         var timeFormat1 = d3.time.format('%b');
@@ -161,7 +160,7 @@ function topChart() {
             drawLineChart('ps', 'ps');
             drawAreaChart('pv', 'pv');
             drawAreaChart('nv', 'nv');            
-            
+
             var dotline = svg.append('line').attr('class', 'dotted_line').attr('x1', 0).attr('y1', (topY(genData[genData.length - 1][MValue]) - 7)).attr('x2', (width - 7)).attr('y2', (topY(genData[genData.length - 1][MValue]) - 7));
             var focus_g = svg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][MValue]) - 7) + ")").style('display', 'none');
 
@@ -242,8 +241,23 @@ function topChart() {
                 $('#huHigh').html("High: " + commaFormat(index.h));
                 $('#huLow').html("Low: " + commaFormat(index.l));
                 $('#huVolume').html("Volume: " + kFormat(index.v));
-                $('#huSocialVolume').html("Social Volume: " + kFormat(index.tv));
-                $('#huSocial').html("Negative Tweets: " + index.nv);
+                $('#huSocialVolume').html("Social Volume: " + kFormat(index.tv));                
+                var tmp_str = "";
+                switch(activeDrop){
+                    case "v":
+                        tmp_str = "Social Volume: "
+                        break;
+                    case "ps":
+                        tmp_str = "% Positive Sentiment: ";
+                        break;
+                    case "pv":
+                        tmp_str = "Positive Tweets: ";
+                        break;
+                    case "nv":
+                        tmp_str = "Negative Tweets: ";
+                        break;
+                }
+                $('#huSocial').html(tmp_str + index[activeDrop]);
                 $('.toolTip').show();
             }
 

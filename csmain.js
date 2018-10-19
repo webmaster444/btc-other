@@ -20,6 +20,7 @@ var TCount = {
     "6m": {"day":180},
     "1y": {"day":365}
 }
+var activeDrop = 'v';
 changeDomain(period);
 function changeDomain(period){
     if (period == "1w") {
@@ -276,18 +277,22 @@ function updateTopChart(option){
     switch(option){
         case "sv":
             d3.selectAll('.sv_line').classed('hide',false);
+            activeDrop = 'v';
         break;
         case "ps":
             d3.selectAll('.ps_line').classed('hide',false);
             d3.selectAll('.top_bar_wrapper').classed('hide',false);
+            activeDrop = 'ps';
             break;
         case "pv":
             d3.selectAll('.pv_area').classed('hide',false);
             d3.selectAll('.top_bar_wrapper').classed('hide',false);
+            activeDrop = 'pv';
         break;
         case "nv":
             d3.selectAll('.nv_area').classed('hide',false);
             d3.selectAll('.top_bar_wrapper').classed('hide',false);
+            activeDrop = 'nv';
         break;
         case "ema12":
             if($('.study.ema12').hasClass('active')){

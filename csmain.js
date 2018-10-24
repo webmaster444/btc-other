@@ -9,7 +9,7 @@ var timestampduration = 0;
 var interval='day';
 var topY;
 var TCount = {
-    "1w": {"day":7,"hour":24 * 7},
+    "1w": {"day":8,"hour":24 * 7},
     "1m": {"day":31,"hour": 24 * 30},
     "2w": {"day":14,"hour":24 * 14},
     "1d": {"minute":24 * 60,"hour":25},
@@ -89,8 +89,8 @@ function displayCS() {
     var chart1 = topChart().Bheight(250).MValue('v');
     d3.select("#chart1").call(chart1);
     d3.select('.sv_line').classed('hide',false);
-    var chart2 = bottomChart().Bheight(250);
-    d3.select("#chart2").call(chart2);    
+    // var chart2 = bottomChart().Bheight(250);
+    // d3.select("#chart2").call(chart2);    
 }
 
 function calcema(period, data) {
@@ -232,6 +232,10 @@ $('.option ul li').click(function(){
     updateTopChart($(this).attr('data-option'));
 })
 
+$('.duration.option ul li').click(function(){
+    console.log($(this).attr('data-option'));
+})
+
 function updateDropDown(option){
     switch(option){
         case "sv":
@@ -277,7 +281,7 @@ function updateTopChart(option){
     switch(option){
         case "sv":
             d3.selectAll('.sv_line').classed('hide',false);
-            activeDrop = 'v';
+            activeDrop = 'v';            
         break;
         case "ps":
             d3.selectAll('.ps_line').classed('hide',false);
@@ -314,7 +318,7 @@ function updateTopChart(option){
             }else{
                 d3.select('.linechart_wrapper.ip').style('display','none');    
             } 
-        break;
+        break;        
     }
 };
 

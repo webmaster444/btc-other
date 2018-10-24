@@ -285,7 +285,7 @@ g.tvbar{
 .list-inline{
     text-align: left;
 }
-.focus_g text{
+.focus_g text,.bot_focus_g text{
     fill: black;
     font-size: 11px;
 }

@@ -393,16 +393,16 @@ function topChart() {
                 });;
 
                 botBarY.domain([0, d3.max(new_genData, function(d) {
-                    return d["v"];
+                    return d["tv"];
                 })]).nice();
                 
                 // d3.selectAll('.volume').data(genData)
-                d3.selectAll('.volume').data(genData).attr("x", function(d) {
+                d3.selectAll('.tvbar .volume').data(genData).attr("x", function(d) {
                     return x(d.Date) - barwidth / 2;
                 }).attr("y", function(d) {                    
-                    return botBarY(d['v']);
+                    return botBarY(d['tv']);
                 }).attr("height", function(d) {                    
-                    return botBarY(0) - botBarY(d['v']);                    
+                    return botBarY(0) - botBarY(d['tv']);                    
                 });
 
                 var new_ema12 = ema12.filter(function(d){                                        

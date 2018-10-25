@@ -26,15 +26,15 @@ function changeDomain(period){
     if (period == "1w") {
         timestampduration = 1000 * 60 * 60 * 24 * 7;    
     }else if(period =='1m'){
-        timestampduration = 1000 * 60 * 60 * 24 * 31;
+        timestampduration = 1000 * 60 * 60 * 24 * 30;
     }else if (period =='2w'){
-        timestampduration = 1000 * 60 * 60 * 24 * 15;
+        timestampduration = 1000 * 60 * 60 * 24 * 14;
     }else if (period =='3m'){
-        timestampduration = 1000 * 60 * 60 * 24 * 31 * 3;
+        timestampduration = 1000 * 60 * 60 * 24 * 30 * 3;
     }else if(period == '6m'){
-        timestampduration = 1000 * 60 * 60 * 24 * 31 * 6;
+        timestampduration = 1000 * 60 * 60 * 24 * 30 * 6;
     }else if(period =='1y'){
-        timestampduration = 1000 * 60 * 60 * 24 * 366;
+        timestampduration = 1000 * 60 * 60 * 24 * 365;
     }else if(period == "3h"){
         timestampduration = 1000 * 60 * 60 * 3;
     }else if(period =="1h"){
@@ -50,7 +50,7 @@ function changeDomain(period){
 (function() {
     // var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval="+interval+"&startDate="+startDate+"&endDate="+endDate;
     // var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
-    var url = 'data_backup.json';
+    var url = 'data.json';
     d3.json(url, function(error, data) {        
         data.forEach(function(d) {
             // d.Date = Date.parse(d.dt);
@@ -88,9 +88,7 @@ function mainjs() {
 function displayCS() {
     var chart1 = topChart().Bheight(250).MValue('v');
     d3.select("#chart1").call(chart1);
-    d3.select('.sv_line').classed('hide',false);
-    // var chart2 = bottomChart().Bheight(250);
-    // d3.select("#chart2").call(chart2);    
+    d3.select('.sv_line').classed('hide',false);  
 }
 
 function calcema(period, data) {
@@ -133,68 +131,6 @@ $('.custom-control-input').change(function() {
         $('.linechart_wrapper.ip').toggle();
     }
 })
-
-//Trigger redraw when view radio button is clicked
-// $('input[type=radio][name=view]').change(function() {    
-//     $('#period').html('');
-//     $('#radioes2 label').removeClass('active');
-//     if ($(this).val() == '1m') {
-//         $('#period').append('<option value="1h">1h</option>');
-//         $('#period').append('<option value="3h" selected>3h</option>');
-//         $('#period').append('<option value="6h">6h</option>');
-//         $('#period').append('<option value="1d">1d</option>');
-//         $('.implied_price').css('display', 'none');        
-//         interval = "minute";
-//         period   = "3h";        
-//     } else if ($(this).val() == "1h") {
-//         $('#period').append('<option value="1d">1d</option>');
-//         $('#period').append('<option value="1w" selected>1w</option>');
-//         $('#period').append('<option value="2w">2w</option>');
-//         $('#period').append('<option value="1m">1m</option>');
-//         $('.implied_price').css('display', 'none');
-//         interval = "hour";
-//         period = "1w";
-//     } else if ($(this).val() == "1d") {
-//         $('#period').append('<option value="1w">1w</option>');
-//         $('#period').append('<option value="1m" selected>1m</option>');
-//         $('#period').append('<option value="6m">6m</option>');
-//         $('#period').append('<option value="1y">1y</option>');
-//         $('.implied_price').css('display', 'inline-block');
-//         interval = "day";
-//         period = "1m";
-//     }
-//     $('#checkboxes2 input[type="checkbox"]').prop('checked', false);
-//     changeDomain(period);
-//     $(this).parent().addClass('active');
-//     if (interval == 'minute') {
-//         startDate = "2018-06-15T00:00:00";
-//     } else if (interval == 'hour') {
-//         startDate = "2018-04-01T00:00:00";
-//     } else if (interval == 'day') {
-//         startDate = "2017-06-01T00:00:00";
-//     }
-//     // var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval=" + interval + "&startDate=" + startDate + "&endDate=" + endDate;
-//     var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
-//     d3.json(url, function(error, data) {
-//         $('#chart1').empty();        
-//         data.forEach(function(d) {
-//             d.Date = Date.parse(d.Date);
-//             d.Low = +d.Low;
-//             d.High = +d.High;
-//             d.Open = +d.Open;
-//             d.Close = +d.Close;
-//             d.Volume = +d.Volume;
-//             d.PV = +d.PV;
-//             d.PS = +d.PS;
-//             d.NV = +d.NV;
-//             d.TV = +d.TV;
-//         })
-//         genRaw = data;
-//         ema12 = calcema(12, genRaw);
-//         ema26 = calcema(26, genRaw);        
-//         mainjs();
-//     });
-// });
 
 document.getElementById('chart1').onwheel = function(){ return false; }
 
@@ -319,6 +255,36 @@ function updateTopChart(option){
                 d3.select('.linechart_wrapper.ip').style('display','none');    
             } 
         break;        
+        case "1w":
+            period = '1w';
+            changeDomain(period);
+            displayCS(); 
+            break;
+        case "2w":
+            period = '2w';
+            changeDomain(period);
+            displayCS(); 
+            break;
+        case "1m":
+            period = '1m';
+            changeDomain(period);
+            displayCS(); 
+            break;
+        case "3m":
+            period = '3m';
+            changeDomain(period);
+            displayCS(); 
+            break;
+        case "6m":
+            period = '6m';
+            changeDomain(period);
+            displayCS(); 
+            break;
+        case "1y":
+            period = '1y';
+            changeDomain(period);
+            displayCS(); 
+            break;            
     }
 };
 

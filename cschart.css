@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     width: 100%;
     height: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 /* Container
 /* =============================================== */
@@ -16,7 +17,9 @@ html, body {
     color: #fff;             
 }
 
-
+#botchart_title{
+    top: 430px;
+}
 .grid text{
     display: none;
 }
@@ -351,7 +354,7 @@ g.tvbar{
 }
 
 .option:first-child{
-    width: 150px;
+    width: 160px;
 }
 .option{
     display: inline-block;

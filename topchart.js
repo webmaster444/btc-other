@@ -1,7 +1,7 @@
 function topChart() {
 
     var margin = {
-            top: 30,
+            top: 0,
             right: 50,
             bottom: 50,
             left: 5
@@ -34,10 +34,11 @@ function topChart() {
 
     function csrender(selection) {
         selection.each(function() {
+            var tmp_divider = TCount[period][interval];
             var parseDate = d3.time.format("%d");
             var x = d3.time.scale()
                 .domain([startDomain, endDomain])
-                .range([width / 8 / 2, (width - width / 8 / 2)]);
+                .range([width / tmp_divider / 2, (width - width / tmp_divider / 2)]);
 
             topY = d3.scale.linear().rangeRound([topHeight, 0]);
             var pan_y = d3.scale.linear().rangeRound([topHeight, 0]);
@@ -78,8 +79,7 @@ function topChart() {
             topY.domain(d3.extent(genData, function(d) {
                 return d[MValue];
             })).nice();
-        
-            var tmp_divider = TCount[period][interval];
+                    
             var barwidth = width / tmp_divider;            
 
             var valueareapv = d3.svg.area().x(function(d) {
@@ -135,7 +135,7 @@ function topChart() {
             topSvg.append("g")
                 .attr("class", "axis xaxis")
                 .attr("transform", "translate(0," + topHeight + ")")
-                .call(xAxis.orient("bottom").ticks(7).tickFormat(monthDay));
+                .call(xAxis.orient("bottom"));
 
             topSvg.append("g")
                 .attr("class", "axis yaxis topyaxis")
@@ -367,7 +367,7 @@ function topChart() {
                     return d.h;
                 })]).nice();
 
-                // svg.select(".yaxis").call(yAxis.orient("right").tickSize(0));                       
+                botSvg.select(".botYAxis").call(botYAxis.orient("right").tickSize(6));                       
 
                 svg.selectAll('.candle').data(genData).attr("x", function(d) {
                     return x(d.Date) - candlewidth/2
@@ -558,8 +558,7 @@ function topChart() {
             botBarY.domain([0, d3.max(genData, function(d) {                
                 return d["tv"];
             })]).nice();
-
-            var xAxis = d3.svg.axis().scale(x);            
+               
 
             var botYAxis = d3.svg.axis()
                 .scale(botY)
@@ -577,10 +576,10 @@ function topChart() {
                     return d.h;
                 })]).nice();
 
-            // y.domain([minimal, maximal]).nice();
+            // // y.domain([minimal, maximal]).nice();
         
-            var tmp_divider = TCount[period][interval];             
-            var barwidth = width / tmp_divider;
+            // var tmp_divider = TCount[period][interval];             
+            // var barwidth = width / tmp_divider;
             
             var candlewidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;            
             var delta = Math.round((barwidth - candlewidth) / 2);
@@ -631,7 +630,8 @@ function topChart() {
             botSvg.append("g")
                 .attr("class", "axis xaxis")
                 .attr("transform", "translate(0," + botHeight + ")")
-                .call(xAxis.orient("bottom").ticks(7));            
+                // .call(xAxis.orient("bottom").ticks(tmp_divider));            
+                .call(xAxis.orient("bottom"));            
 
             botSvg.append("g")
                 .attr("class", "axis botYAxis")
@@ -742,7 +742,7 @@ function topChart() {
                             .attr("x", 0)
                             .attr("y", 0)
                             .attr('rx',0)
-                            .attr("width", width/8)
+                            .attr("width", width/tmp_divider)
                             .attr("height", botHeight);            
 
             var bot_x_line = botSvg.append('line').attr('class','x_grid_line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',botHeight).style('display','none');

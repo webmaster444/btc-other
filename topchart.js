@@ -66,13 +66,13 @@ function topChart() {
                 .scale(topY)
                 .ticks(Math.floor(topHeight / 50));
 
-            var new1_genData = genData.filter(function(d) {
+            var new_genData = genData.filter(function(d) {
                 if (d.Date > startDomain && d.Date <= endDomain) {
                     return d;
                 }
             });
             
-            bar_y.domain([0, d3.max(genData, function(d) {
+            bar_y.domain([0, d3.max(new_genData, function(d) {
                 return d["v"];
             })]).nice();
 
@@ -132,6 +132,17 @@ function topChart() {
                 .attr("width", width)
                 .attr("height", topHeight);
 
+            if(period=='1w'){
+                topSvg.append("g")
+                .attr("class", "axis xaxis")
+                .attr("transform", "translate(0," + topHeight + ")")
+                .call(xAxis.orient("bottom").ticks(8));    
+            }else{
+                topSvg.append("g")
+                .attr("class", "axis xaxis")
+                .attr("transform", "translate(0," + topHeight + ")")
+                .call(xAxis.orient("bottom"));  
+            }
             topSvg.append("g")
                 .attr("class", "axis xaxis")
                 .attr("transform", "translate(0," + topHeight + ")")
@@ -425,7 +436,7 @@ function topChart() {
             }
 
             function drawLineChart(MValue, mname) {                   
-                tmp_y.domain(d3.extent(new1_genData, function(d) {
+                tmp_y.domain(d3.extent(new_genData, function(d) {
                     return d[MValue];
                 })).nice();
 
@@ -504,7 +515,7 @@ function topChart() {
                     .attr("stop-color", "#2F323C")
                     .attr("stop-opacity", 1);
 
-                tmp_y.domain(d3.extent(new1_genData, function(d) {
+                tmp_y.domain(d3.extent(new_genData, function(d) {
                     return d[MValue];
                 })).nice();
 
@@ -555,7 +566,7 @@ function topChart() {
             // y axis for bar chart pan functionality
             var botBarY = d3.scale.linear().rangeRound([barHeight, 0]);
 
-            botBarY.domain([0, d3.max(genData, function(d) {                
+            botBarY.domain([0, d3.max(new_genData, function(d) {                
                 return d["tv"];
             })]).nice();
                
@@ -564,15 +575,15 @@ function topChart() {
                 .scale(botY)
                 .ticks(Math.floor(botHeight / 50));
                         
-            var new1_genData = genData.filter(function(d){                                        
+            var new_genData = genData.filter(function(d){                                        
                     if(d.Date > startDomain && d.Date <endDomain){
                         return d;
                     }
                 });
 
-            botY.domain([d3.min(new1_genData, function(d) {
+            botY.domain([d3.min(new_genData, function(d) {
                     return d.l;
-                }), d3.max(new1_genData, function(d) {
+                }), d3.max(new_genData, function(d) {
                     return d.h;
                 })]).nice();
 
@@ -627,11 +638,20 @@ function topChart() {
             .attr("width", width)
             .attr("height", botHeight);
 
-            botSvg.append("g")
-                .attr("class", "axis xaxis")
-                .attr("transform", "translate(0," + botHeight + ")")
-                // .call(xAxis.orient("bottom").ticks(tmp_divider));            
-                .call(xAxis.orient("bottom"));            
+if(period=='1w'){
+    botSvg.append("g")
+    .attr("class", "axis xaxis")
+    .attr("transform", "translate(0," + botHeight + ")")
+    // .call(xAxis.orient("bottom").ticks(tmp_divider));            
+    .call(xAxis.orient("bottom"));  
+}else{
+    botSvg.append("g")
+    .attr("class", "axis xaxis")
+    .attr("transform", "translate(0," + botHeight + ")")
+    // .call(xAxis.orient("bottom").ticks(tmp_divider));            
+    .call(xAxis.orient("bottom").ticks(8));  
+}
+          
 
             botSvg.append("g")
                 .attr("class", "axis botYAxis")

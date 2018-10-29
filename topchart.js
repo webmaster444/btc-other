@@ -78,7 +78,7 @@ function topChart() {
                         return d["v"];
                     })]).nice();
 
-                    topY.domain(d3.extent(genData, function(d) {
+                    topY.domain(d3.extent(new_genData, function(d) {
                         return d[MValue];
                     })).nice();
 
@@ -109,15 +109,17 @@ function topChart() {
                     }).y(function(d) {
                         return tmp_y(d['ps']);
                     }).interpolate('basis');
+                    
                     var valuelineema12 = d3.svg.line().x(function(d) {
                         return x(d.Date);
                     }).y(function(d) {
-                        return tmp_y(d['ema']);
+                        return topY(d['ema']);
                     }).interpolate('basis');
-                    var valuelineema26 = d3.svg.line().x(function(d) {
+
+                    var botLineEma12 = d3.svg.line().x(function(d) {
                         return x(d.Date);
                     }).y(function(d) {
-                        return tmp_y(d['ema']);
+                        return botY(d['ema']);
                     }).interpolate('basis');
 
                     d3.select(this).select("svg").remove();
@@ -157,11 +159,6 @@ function topChart() {
                         .attr("transform", "translate(" + width + ",0)")
                         .call(yAxis.orient("right").tickSize(6));
 
-                    topSvg.append("g")
-                        .attr("class", "axis grid topxaxis")
-                        .attr("transform", "translate(" + width + ",0)")
-                        .call(yAxis.orient("left").tickSize(0));
-
                     drawBarChart('v', 'sv');
                     drawLineChart('v', 'sv');
                     drawLineChart('ps', 'ps');
@@ -169,8 +166,14 @@ function topChart() {
                     drawAreaChart('pv', 'pv');
                     drawAreaChart('nv', 'nv');
 
-                    var dotline = topSvg.append('line').attr('class', 'dotted_line').attr('x1', 0).attr('y1', (topY(genData[genData.length - 1][MValue]) - 7)).attr('x2', (width - 7)).attr('y2', (topY(genData[genData.length - 1][MValue]) - 7));
-                    var focus_g = topSvg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][MValue]) - 7) + ")").style('display', 'none');
+                    var dotline = topSvg.append('line').attr('class', 'dotted_line').attr('x1', 0).attr('y1', (topY(genData[genData.length - 1][activeDrop]))).attr('x2', (width - 7)).attr('y2', (topY(genData[genData.length - 1][activeDrop])));
+
+                    var top_indicator_g = topSvg.append('g').attr('class', 'indicator_g top_indicator_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][activeDrop]) - 7) + ")");
+                        top_indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
+                        top_indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', activeDrop + '_indicator');
+                        top_indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1][activeDrop].toFixed(2));
+
+                    var focus_g = topSvg.append('g').attr('class', 'focus_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][activeDrop]) - 7) + ")").style('display', 'none');
 
                     focus_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
                     focus_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'focus_indicator');
@@ -257,13 +260,17 @@ function topChart() {
                             }
                         });
 
-                        focus_g.attr("transform", "translate(" + width + "," + (d3.mouse(this)[1] - 7) + ")");
+                        focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
                         x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
                         x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
                         y_line.attr('y1', d3.mouse(this)[1]).attr('y2', d3.mouse(this)[1]);
-                        focus_g.select("text").text(y0.toFixed(0));
+                        if(activeDrop=='ps'){
+                            focus_g.select("text").text(y0.toFixed(2));
+                        }else{
+                            focus_g.select("text").text(y0.toFixed(0));
+                        }                        
 
-                        bot_focus_g.attr("transform", "translate(" + width + "," + (d3.mouse(this)[1] - 7) + ")");
+                        bot_focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
                         bot_x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
                         bot_x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
                         bot_y_line.attr('y1', d3.mouse(this)[1]).attr('y2', d3.mouse(this)[1]);
@@ -298,6 +305,14 @@ function topChart() {
                     function zoomed() {
                         var vis_startDomain = Date.parse(x.domain()[0]);
                         var vis_endDomain = Date.parse(x.domain()[1]);
+
+                        if(vis_endDomain>=genData[genData.length-1].Date){
+                            d3.select('.dotted_line').classed('hide',false);
+                            d3.select('.green_dotted_line').classed('hide',false);
+                        }else{
+                            d3.select('.dotted_line').classed('hide',true);
+                            d3.select('.green_dotted_line').classed('hide',true);
+                        }
                         d3.selectAll(".xaxis").call(xAxis);
 
                         var new_genData = genData.filter(function(d) {
@@ -316,6 +331,7 @@ function topChart() {
                             return d[activeDrop];
                         })).nice();
 
+                        top_indicator_g.attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][activeDrop]) - 7) + ")");
                         topSvg.select(".topyaxis").call(yAxis.orient("right").tickSize(6));
 
                         bar_y.domain([0, d3.max(new_genData, function(d) {
@@ -375,7 +391,65 @@ function topChart() {
                         tmp_y.domain(d3.extent(new_vema26, function(d) {
                             return d['ema'];
                         })).nice();
-                        d3.selectAll(".v26.emaline").attr("d", valuelineema26(vema26));
+                        d3.selectAll(".v26.emaline").attr("d", valuelineema12(vema26));
+
+                        var new_psema12 = psema12.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+                        tmp_y.domain(d3.extent(new_psema12, function(d) {
+                            return d['ema'];
+                        })).nice();
+                        d3.selectAll(".ps12.emaline").attr("d", valuelineema12(psema12));
+
+                        var new_psema26 = psema26.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+                        tmp_y.domain(d3.extent(new_psema26, function(d) {
+                            return d['ema'];
+                        })).nice();
+                        d3.selectAll(".ps26.emaline").attr("d", valuelineema12(psema26));
+
+                        
+                        var new_pvema12 = pvema12.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+                        tmp_y.domain(d3.extent(new_pvema12, function(d) {
+                            return d['ema'];
+                        })).nice();
+                        d3.selectAll(".pv12.emaline").attr("d", valuelineema12(pvema12));
+
+                        var new_pvema26 = pvema26.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+                        tmp_y.domain(d3.extent(new_pvema26, function(d) {
+                            return d['ema'];
+                        })).nice();
+                        d3.selectAll(".pv26.emaline").attr("d", valuelineema12(pvema26));
+
+                        var new_nvema12 = nvema12.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+                        tmp_y.domain(d3.extent(new_nvema12, function(d) {
+                            return d['ema'];
+                        })).nice();
+                        d3.selectAll(".nv12.emaline").attr("d", valuelineema12(nvema12));
+
+                        d3.selectAll(".nv26.emaline").attr("d", valuelineema12(nvema26));
 
                         //Bot Zoom
                         botPanY.domain([d3.min(new_genData, function(d) {
@@ -390,6 +464,7 @@ function topChart() {
                             return d.h;
                         })]).nice();
 
+                        ohlc_indicator_g.attr('transform', "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")");
                         botSvg.select(".botYAxis").call(botYAxis.orient("right").tickSize(6));
 
                         svg.selectAll('.candle').data(genData).attr("x", function(d) {
@@ -427,6 +502,26 @@ function topChart() {
                         }).attr("height", function(d) {
                             return botBarY(0) - botBarY(d['tv']);
                         });
+
+                        var new_cema12 = cema12.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+
+                        d3.selectAll(".c12.emaline").attr("d", botLineEma12(cema12));
+                        d3.selectAll('.c12_indicator_g').attr('transform', "translate(" + (width-10) + "," + (tmp_y(cema12[cema12.length - 1].ema) - 7) + ")");
+
+                        var new_cema26 = cema26.filter(function(d) {
+                            if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
+                                return d;
+                            }
+                        });
+
+
+                        d3.selectAll(".c26.emaline").attr("d", botLineEma12(cema26));
+                        d3.selectAll('.c26_indicator_g').attr('transform', "translate(" + (width-10) + "," + (tmp_y(cema26[cema26.length - 1].ema) - 7) + ")");
                     }
 
                     function drawLineChart(MValue, mname) {
@@ -445,13 +540,7 @@ function topChart() {
                         chart_wrapper.append("path")
                             .attr("class", mname + "line line")
                             .attr("d", valueline(genData))
-                            .attr("fill", "#path_grad");
-
-                        var indicator_g = chart_wrapper.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][MValue]) - 7) + ")");
-
-                        indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
-                        indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', mname + '_indicator');
-                        indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1][MValue].toFixed(2));
+                            .attr("fill", "#path_grad");                        
                     }
 
                     function drawEmaChart(wrapper, data, stat) {
@@ -461,9 +550,57 @@ function topChart() {
                             }
                         });
 
-                        tmp_y.domain(d3.extent(new_genEmaData, function(d) {
-                            return d['ema'];
+switch(stat){
+    case "v12":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['v'];
                         })).nice();
+    break;
+    case "v26":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['v'];
+                        })).nice();
+    case "ps12":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['ps'];
+                        })).nice();
+    break;
+    case "ps26":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['ps'];
+                        })).nice();
+    break;
+    case "pv12":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['pv'];
+                        })).nice();
+    break;
+    case "pv26":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['pv'];
+                        })).nice();
+    break;
+        case "nv12":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['nv'];
+                        })).nice();
+    break;
+        case "nv26":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['nv'];
+                        })).nice();
+    break;
+            case "c12":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['c'];
+                        })).nice();
+    break;
+            case "c26":
+    tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['c'];
+                        })).nice();
+    break;
+}                        
 
                         var valueline = d3.svg.line()
                             .x(function(d) {
@@ -509,7 +646,7 @@ function topChart() {
                                 d3.select(this).remove();
                             });
 
-                        var indicator_g = ema_g_wrapper.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width) + "," + (tmp_y(data[data.length - 1].ema) - 7) + ")");
+                        var indicator_g = ema_g_wrapper.append('g').attr('class', stat+'_indicator_g indicator_g ema_indicator_g').attr('transform', "translate(" + (width-10) + "," + (tmp_y(data[data.length - 1].ema) - 7) + ")");
 
                         indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
                         indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', stat + '_indicator');
@@ -588,12 +725,6 @@ function topChart() {
                             .attr("class", mname + "area area")
                             .attr("d", valuearea(genData))
                             .attr("fill", "#path_grad" + mname);
-
-                        var indicator_g = chart_wrapper.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width - 10) + "," + (topY(genData[genData.length - 1][MValue]) - 7) + ")");
-
-                        indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
-                        indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', mname + '_indicator');
-                        indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1][MValue].toFixed(2));
                     }
 
                     //Bottom Chart 
@@ -638,11 +769,6 @@ function topChart() {
                     }), d3.max(new_genData, function(d) {
                         return d.h;
                     })]).nice();
-
-                    // // y.domain([minimal, maximal]).nice();
-
-                    // var tmp_divider = TCount[period][interval];             
-                    // var barwidth = width / tmp_divider;
 
                     var candlewidth = (Math.floor(barwidth * 0.9) / 2) * 2 + 1;
                     var delta = Math.round((barwidth - candlewidth) / 2);
@@ -793,13 +919,15 @@ function topChart() {
                             return (d.o > d.c);
                         });
 
-                    var indicator_g = botSvg.append('g').attr('class', 'indicator_g').attr('transform', "translate(" + (width) + "," + (botY(genData[genData.length - 1].c) - 7) + ")");
+                    //Bottom OHLC Indicator
+                    var ohlc_indicator_g = botSvg.append('g').attr('class', 'indicator_g ohlc_indicator_g').attr('transform', "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")");
 
-                    indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
-                    indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'ohlc_indicator');
-                    indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1].c.toFixed(0));
+                    ohlc_indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
+                    ohlc_indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'ohlc_indicator');
+                    ohlc_indicator_g.append('text').attr('x', 12).attr('y', 0).attr('dy', '1em').text(genData[genData.length - 1].c.toFixed(0));
 
-                    var bot_focus_g = botSvg.append('g').attr('class', 'bot_focus_g').attr('transform', "translate(" + (width) + "," + (botY(genData[genData.length - 1].c) - 7) + ")").style('display', 'none');
+                    var dotline = botSvg.append('line').attr('class', 'green_dotted_line').attr('x1', 0).attr('y1', (botY(genData[genData.length - 1]['c']))).attr('x2', (width - 7)).attr('y2', (botY(genData[genData.length - 1]['c'])));
+                    var bot_focus_g = botSvg.append('g').attr('class', 'bot_focus_g').attr('transform', "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")").style('display', 'none');
 
                     bot_focus_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
                     bot_focus_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'focus_indicator');
@@ -815,7 +943,7 @@ function topChart() {
                         .attr("height", botHeight);
 
                     var bot_x_line = botSvg.append('line').attr('class', 'x_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', botHeight).style('display', 'none');
-                    var bot_y_line = botSvg.append('line').attr('class', 'y_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', width).attr('y2', 0).style('display', 'none');
+                    var bot_y_line = botSvg.append('line').attr('class', 'y_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', (width-10)).attr('y2', 0).style('display', 'none');
                     var rect = d3.select(".bot_g").append("svg:rect")
                         .attr("class", "pane")
                         .attr("width", width)
@@ -872,3 +1000,4 @@ function topChart() {
 
         return csrender;
     } // cschart
+

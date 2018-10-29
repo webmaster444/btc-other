@@ -106,7 +106,7 @@ function displayCS() {
 function updateChartByOptions(){
     switch(activeDrop){
         case "v":
-            d3.select('.sv_line').classed('hide',false);  
+            d3.select('.sv_line').classed('hide',false);             
             break;
         case 'ps':    
             d3.select('.ps_line').classed('hide',false);
@@ -251,71 +251,81 @@ function updateDropDown(option){
 function updateTopChart(option){
     switch(option){
         case "sv":
-            d3.selectAll('.line_wrapper').classed('hide',true);
-            d3.selectAll('.area_wrapper').classed('hide',true);
-            d3.selectAll('.top_bar_wrapper').classed('hide',true);
+            // d3.selectAll('.line_wrapper').classed('hide',true);
+            // d3.selectAll('.area_wrapper').classed('hide',true);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',true);
 
-            d3.selectAll('.sv_line').classed('hide',false);            
+            // d3.selectAll('.sv_line').classed('hide',false);            
             activeDrop = 'v';            
             updateEma12();
-            updateEma26();
-            if($('.study.ip').hasClass('active')){
-                d3.select('.line_wrapper.ip_line').classed('hide',false);    
-            }else{
-                d3.select('.line_wrapper.ip_line').classed('hide',true);    
-            } 
+            updateEma26();            
+            // if($('.study.ip').hasClass('active')){
+            //     d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            // }else{
+            //     d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            // } 
+
+            // updateYAxisAndIndicator(activeDrop);
+            displayCS();
         break;
         case "ps":
-            d3.selectAll('.line_wrapper').classed('hide',true);
-            d3.selectAll('.area_wrapper').classed('hide',true);
-            d3.selectAll('.top_bar_wrapper').classed('hide',true);
+            // d3.selectAll('.line_wrapper').classed('hide',true);
+            // d3.selectAll('.area_wrapper').classed('hide',true);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',true);
 
-            d3.selectAll('.ps_line').classed('hide',false);
-            d3.selectAll('.top_bar_wrapper').classed('hide',false);
+            // d3.selectAll('.ps_line').classed('hide',false);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',false);
             activeDrop = 'ps';
 
             updateEma12();
             updateEma26();
-            if($('.study.ip').hasClass('active')){
-                d3.select('.line_wrapper.ip_line').classed('hide',false);    
-            }else{
-                d3.select('.line_wrapper.ip_line').classed('hide',true);    
-            } 
+            // if($('.study.ip').hasClass('active')){
+            //     d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            // }else{
+            //     d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            // } 
 
+            // updateYAxisAndIndicator(activeDrop);
+            displayCS();
             break;
         case "pv":
-            d3.selectAll('.line_wrapper').classed('hide',true);
-            d3.selectAll('.area_wrapper').classed('hide',true);
-            d3.selectAll('.top_bar_wrapper').classed('hide',true);
+            // d3.selectAll('.line_wrapper').classed('hide',true);
+            // d3.selectAll('.area_wrapper').classed('hide',true);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',true);
             
-            d3.selectAll('.pv_area').classed('hide',false);
-            d3.selectAll('.top_bar_wrapper').classed('hide',false);
+            // d3.selectAll('.pv_area').classed('hide',false);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',false);
             activeDrop = 'pv';
 
             updateEma12();
             updateEma26();
-            if($('.study.ip').hasClass('active')){
-                d3.select('.line_wrapper.ip_line').classed('hide',false);    
-            }else{
-                d3.select('.line_wrapper.ip_line').classed('hide',true);    
-            } 
+            // if($('.study.ip').hasClass('active')){
+            //     d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            // }else{
+            //     d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            // } 
+
+            // updateYAxisAndIndicator(activeDrop);
+            displayCS();
         break;
         case "nv":
-            d3.selectAll('.line_wrapper').classed('hide',true);
-            d3.selectAll('.area_wrapper').classed('hide',true);
-            d3.selectAll('.top_bar_wrapper').classed('hide',true);
+            // d3.selectAll('.line_wrapper').classed('hide',true);
+            // d3.selectAll('.area_wrapper').classed('hide',true);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',true);
 
-            d3.selectAll('.nv_area').classed('hide',false);
-            d3.selectAll('.top_bar_wrapper').classed('hide',false);
+            // d3.selectAll('.nv_area').classed('hide',false);
+            // d3.selectAll('.top_bar_wrapper').classed('hide',false);
             activeDrop = 'nv';
 
             updateEma12();
             updateEma26();
-            if($('.study.ip').hasClass('active')){
-                d3.select('.line_wrapper.ip_line').classed('hide',false);    
-            }else{
-                d3.select('.line_wrapper.ip_line').classed('hide',true);    
-            } 
+            // if($('.study.ip').hasClass('active')){
+            //     d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            // }else{
+            //     d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            // } 
+            // updateYAxisAndIndicator(activeDrop);
+            displayCS();
         break;
         case "ema12":
             updateEma12();
@@ -435,6 +445,10 @@ function updateEma26(){
         }
         d3.select('.c26_g_wrapper').classed('hide',true);
     }  
+}
+
+function updateYAxisAndIndicator(activeDrop){
+
 }
 function formatDate(date) {
     var d = new Date(date),

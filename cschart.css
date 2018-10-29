@@ -50,10 +50,9 @@ body {
     fill: darkgrey;
     stroke-opacity: .3;
 }
-.axis.yaxis path {
+.axis path {
     fill: none;
-    stroke: #292f3b;
-    display: none
+    stroke: white;    
 }
 .bands rect {
     fill: #c8d6d6;
@@ -347,9 +346,13 @@ fieldset {
 *:hover {
     outline: none;
 }
-.indicator_g text {
+.indicator_g text,.ohlc_indicator_g text{
     fill: white;
     font-size: 11px;
+}
+.v_indicator{
+    stroke: #B82C0C;
+    fill: #B82C0C;
 }
 .ps_indicator {
     stroke: #8cc176;
@@ -376,8 +379,8 @@ fieldset {
     fill: #e29eda;
 }
 .ohlc_indicator {
-    stroke: #fc6a42;
-    fill: #fc6a42;
+    stroke: #8CC176;
+    fill: #8CC176;
 }
 .ip_indicator {
     stroke: #FAEFBD;
@@ -560,16 +563,22 @@ g.tvbar {
 * {
     box-sizing: border-box;
 }
-.indicator_g path {
-    fill: #B82C0C !important;
-    stroke: #B82C0C !important;
-}
 .sv path {
     stroke: #576F7F;
 }
-.dotted_line {
-    stroke: #B82C0C !important;
+.ps_dotted_line,.green_dotted_line {
+    stroke: #8CC176;
     stroke-dasharray: 5 5;
+}
+.dotted_line {
+    stroke: #B82C0C;
+    stroke-dasharray: 5 5;
+}
+.ema_26_g .ema_indicator_g path{
+    fill:#e29eda;
+}
+.ema_12_g .ema_indicator_g path{
+    fill:#07b0bb;
 }
 .toolTip {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

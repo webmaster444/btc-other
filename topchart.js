@@ -82,7 +82,7 @@ function topChart() {
                         return d[MValue];
                     })).nice();
 
-                    var barwidth = width / tmp_divider;
+                    var barwidth = width / tmp_divider * 0.9;
 
                     var valueareapv = d3.svg.area().x(function(d) {
                         return x(d.Date);
@@ -134,8 +134,9 @@ function topChart() {
                         .attr("id", "clip")
                         .append("rect")
                         .attr("width", width)
-                        .attr("height", topHeight);
-
+                        .attr("height", (topHeight+30));
+                    
+                    drawBarChart('v', 'sv');
                     if (period == '1w') {
                         topSvg.append("g")
                             .attr("class", "axis xaxis")
@@ -158,8 +159,7 @@ function topChart() {
                         .attr("class", "axis yaxis topyaxis")
                         .attr("transform", "translate(" + width + ",0)")
                         .call(yAxis.orient("right").tickSize(6));
-
-                    drawBarChart('v', 'sv');
+                    
                     drawLineChart('v', 'sv');
                     drawLineChart('ps', 'ps');
                     drawLineChart('ip', 'ip');
@@ -190,51 +190,7 @@ function topChart() {
 
                     var x_line = topSvg.append('line').attr('class', 'x_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', topHeight).style('display', 'none');
                     var y_line = topSvg.append('line').attr('class', 'y_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', (width - 10)).attr('y2', 0).style('display', 'none');
-                    var rect = d3.select(".top_g").append("svg:rect")
-                        .attr("class", "pane")
-                        .attr("width", width)
-                        .attr("height", topHeight)
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                        .on('mousedown', function() {
-                            d3.select(this).style('cursor', '-webkit-grabbing');
-                            focus_g.style("display", "none");
-                            x_move_wrapper.style("display", "none");
-                            x_line.style('display', "none");
-                            y_line.style('display', "none")
-                        })
-                        .on('mouseup', function() {
-                            d3.select(this).style('cursor', 'crosshair');
-                            focus_g.style("display", null);
-                            x_move_wrapper.style("display", null);
-                            x_line.style('display', null);
-                            y_line.style('display', null)
-
-                            bot_focus_g.style("display", null);
-                            bot_x_move_wrapper.style("display", null);
-                            bot_x_line.style('display', null);
-                            bot_y_line.style('display', null)
-                        })
-                        .on("mouseover", function() {
-                            focus_g.style("display", null);
-                            x_move_wrapper.style("display", null);
-                            bot_focus_g.style("display", null);
-                            bot_x_move_wrapper.style("display", null);
-                            x_line.style('display', null);
-                            y_line.style('display', null);
-                            bot_x_line.style('display', null);
-                            bot_y_line.style('display', null);
-                        })
-                        .on("mouseout", function() {
-                            focus_g.style("display", "none");
-                            x_move_wrapper.style("display", "none");
-                            x_line.style('display', 'none');
-                            y_line.style('display', 'none');
-                            bot_x_line.style('display', 'none');
-                            bot_y_line.style('display', 'none');
-                            $('.toolTip').hide();
-                        })
-                        .on("mousemove", mousemove)
-                        .call(zoom).on("wheel.zoom", null);
+                    
 
                     drawEmaChart(topSvg, vema12, 'v12');
                     drawEmaChart(topSvg, vema26, 'v26');
@@ -246,6 +202,7 @@ function topChart() {
                     drawEmaChart(topSvg, nvema26, 'nv26');
 
                     function mousemove() {
+                        console.log('mousemove');
                         var x0 = x.invert(d3.mouse(this)[0]);
                         var y0 = topY.invert(d3.mouse(this)[1]);
                         var y1 = botY.invert(d3.mouse(this)[1]);
@@ -665,6 +622,52 @@ function topChart() {
                             .attr("d", valuearea(genData))
                             .attr("fill", "#path_grad" + mname);
                     }
+
+var rect = d3.select(".top_g").append("svg:rect")
+                        .attr("class", "pane")
+                        .attr("width", width)
+                        .attr("height", (topHeight))
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                        .on('mousedown', function() {
+                            d3.select(this).style('cursor', '-webkit-grabbing');
+                            focus_g.style("display", "none");
+                            x_move_wrapper.style("display", "none");
+                            x_line.style('display', "none");
+                            y_line.style('display', "none")
+                        })
+                        .on('mouseup', function() {
+                            d3.select(this).style('cursor', 'crosshair');
+                            focus_g.style("display", null);
+                            x_move_wrapper.style("display", null);
+                            x_line.style('display', null);
+                            y_line.style('display', null)
+
+                            bot_focus_g.style("display", null);
+                            bot_x_move_wrapper.style("display", null);
+                            bot_x_line.style('display', null);
+                            bot_y_line.style('display', null)
+                        })
+                        .on("mouseover", function() {
+                            focus_g.style("display", null);
+                            x_move_wrapper.style("display", null);
+                            bot_focus_g.style("display", null);
+                            bot_x_move_wrapper.style("display", null);
+                            x_line.style('display', null);
+                            y_line.style('display', null);
+                            bot_x_line.style('display', null);
+                            bot_y_line.style('display', null);
+                        })
+                        .on("mouseout", function() {
+                            focus_g.style("display", "none");
+                            x_move_wrapper.style("display", "none");
+                            x_line.style('display', 'none');
+                            y_line.style('display', 'none');
+                            bot_x_line.style('display', 'none');
+                            bot_y_line.style('display', 'none');
+                            $('.toolTip').hide();
+                        })
+                        .on("mousemove", mousemove)
+                        .call(zoom).on("wheel.zoom", null);
 
                     //Bottom Chart 
                     // y axes for OHLC chart

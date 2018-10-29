@@ -613,9 +613,13 @@ g.tvbar {
 }
 .svbar rect {
     fill: #434753;
+    stroke: black;
+    stroke-width:0.5px;
 }
 .tvbar rect {
     fill: #505D64;
+    stroke: black;
+    stroke-width:0.5px;
 }
 .x_move_rect {
     fill: #bfbfbf33;

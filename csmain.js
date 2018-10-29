@@ -49,8 +49,8 @@ function changeDomain(period){
 }
 (function() {
     // var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval="+interval+"&startDate="+startDate+"&endDate="+endDate;
-    // var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
-    var url = 'data.json';
+    var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
+    // var url = 'data.json';
     d3.json(url, function(error, data) {        
         data.forEach(function(d) {
             // d.Date = Date.parse(d.dt);

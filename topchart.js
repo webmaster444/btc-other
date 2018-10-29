@@ -235,6 +235,7 @@ function topChart() {
                         })
                         .on("mousemove", mousemove)
                         .call(zoom).on("wheel.zoom", null);
+
                     drawEmaChart(topSvg, vema12, 'v12');
                     drawEmaChart(topSvg, vema26, 'v26');
                     drawEmaChart(topSvg, psema12, 'ps12');
@@ -370,85 +371,13 @@ function topChart() {
                         d3.selectAll(".nvarea")
                             .attr("d", valueareanv(genData));
 
-
-                        var new_vema12 = vema12.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_vema12, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".v12.emaline").attr("d", valuelineema12(vema12));
-
-                        var new_vema26 = vema26.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_vema26, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".v26.emaline").attr("d", valuelineema12(vema26));
-
-                        var new_psema12 = psema12.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_psema12, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".ps12.emaline").attr("d", valuelineema12(psema12));
-
-                        var new_psema26 = psema26.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_psema26, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".ps26.emaline").attr("d", valuelineema12(psema26));
-
-                        
-                        var new_pvema12 = pvema12.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_pvema12, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".pv12.emaline").attr("d", valuelineema12(pvema12));
-
-                        var new_pvema26 = pvema26.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_pvema26, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".pv26.emaline").attr("d", valuelineema12(pvema26));
-
-                        var new_nvema12 = nvema12.filter(function(d) {
-                            if (d.Date > vis_startDomain && d.Date <= vis_endDomain) {
-                                return d;
-                            }
-                        });
-
-                        tmp_y.domain(d3.extent(new_nvema12, function(d) {
-                            return d['ema'];
-                        })).nice();
                         d3.selectAll(".nv12.emaline").attr("d", valuelineema12(nvema12));
-
                         d3.selectAll(".nv26.emaline").attr("d", valuelineema12(nvema26));
 
                         //Bot Zoom
@@ -464,7 +393,17 @@ function topChart() {
                             return d.h;
                         })]).nice();
 
-                        ohlc_indicator_g.attr('transform', "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")");
+                        ohlc_indicator_g.attr('transform', function(){
+                            if(botY(genData[genData.length-1].c)-7 < 0){
+                                return "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")";
+                            }
+
+                            if(botY(genData[genData.length-1].c) > botHeight){
+                                return "translate(" + (width-10) + "," + (botHeight - 7) + ")";
+                            }
+                            return "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")";
+                        });
+
                         botSvg.select(".botYAxis").call(botYAxis.orient("right").tickSize(6));
 
                         svg.selectAll('.candle').data(genData).attr("x", function(d) {
@@ -511,7 +450,7 @@ function topChart() {
 
 
                         d3.selectAll(".c12.emaline").attr("d", botLineEma12(cema12));
-                        d3.selectAll('.c12_indicator_g').attr('transform', "translate(" + (width-10) + "," + (tmp_y(cema12[cema12.length - 1].ema) - 7) + ")");
+                        d3.selectAll('.c12_indicator_g').attr('transform', "translate(" + (width-10) + "," + (botY(cema12[cema12.length - 1].ema) - 7) + ")");
 
                         var new_cema26 = cema26.filter(function(d) {
                             if (d.Date > vis_startDomain && d.Date < vis_endDomain) {
@@ -521,7 +460,7 @@ function topChart() {
 
 
                         d3.selectAll(".c26.emaline").attr("d", botLineEma12(cema26));
-                        d3.selectAll('.c26_indicator_g').attr('transform', "translate(" + (width-10) + "," + (tmp_y(cema26[cema26.length - 1].ema) - 7) + ")");
+                        d3.selectAll('.c26_indicator_g').attr('transform', "translate(" + (width-10) + "," + (botY(cema26[cema26.length - 1].ema) - 7) + ")");
                     }
 
                     function drawLineChart(MValue, mname) {
@@ -543,65 +482,65 @@ function topChart() {
                             .attr("fill", "#path_grad");                        
                     }
 
-                    function drawEmaChart(wrapper, data, stat) {
+                    function drawEmaChart(wrapper, data, stat) {                        
                         var new_genEmaData = data.filter(function(d) {
                             if (d.Date > startDomain && d.Date <= endDomain) {
                                 return d;
                             }
                         });
 
-switch(stat){
-    case "v12":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['v'];
-                        })).nice();
-    break;
-    case "v26":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['v'];
-                        })).nice();
-    case "ps12":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['ps'];
-                        })).nice();
-    break;
-    case "ps26":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['ps'];
-                        })).nice();
-    break;
-    case "pv12":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['pv'];
-                        })).nice();
-    break;
-    case "pv26":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['pv'];
-                        })).nice();
-    break;
-        case "nv12":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['nv'];
-                        })).nice();
-    break;
-        case "nv26":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['nv'];
-                        })).nice();
-    break;
-            case "c12":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['c'];
-                        })).nice();
-    break;
-            case "c26":
-    tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['c'];
-                        })).nice();
-    break;
-}                        
-
+                        switch(stat){
+                            case "v12":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['v'];
+                                })).nice();
+                            break;
+                            case "v26":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['v'];
+                                })).nice();    
+                            break;
+                            case "ps12":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['ps'];
+                                })).nice();
+                            break;
+                            case "ps26":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['ps'];
+                                })).nice();
+                            break;
+                            case "pv12":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['pv'];
+                                })).nice();
+                            break;
+                            case "pv26":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['pv'];
+                                })).nice();
+                            break;
+                            case "nv12":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['nv'];
+                                })).nice();
+                            break;
+                            case "nv26":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['nv'];
+                                })).nice();
+                            break;
+                            case "c12":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['c'];
+                                })).nice();
+                            break;
+                            case "c26":
+                                tmp_y.domain(d3.extent(new_genData, function(d) {
+                                    return d['c'];
+                                })).nice();
+                            break;
+                        }                        
                         var valueline = d3.svg.line()
                             .x(function(d) {
                                 return x(d.Date)
@@ -920,7 +859,16 @@ switch(stat){
                         });
 
                     //Bottom OHLC Indicator
-                    var ohlc_indicator_g = botSvg.append('g').attr('class', 'indicator_g ohlc_indicator_g').attr('transform', "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")");
+                    var ohlc_indicator_g = botSvg.append('g').attr('class', 'indicator_g ohlc_indicator_g').attr('transform', function(){
+                        if(botY(genData[genData.length-1].c)-7 < 0){
+                            return "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")";
+                        }
+
+                        if(botY(genData[genData.length-1].c) > botHeight){
+                            return "translate(" + (width-10) + "," + (botHeight - 7) + ")";
+                        }
+                        return "translate(" + (width-10) + "," + (botY(genData[genData.length - 1].c) - 7) + ")";
+                    });
 
                     ohlc_indicator_g.append('svg').attr('viewBox', "0 0 65 15").attr("enable-background", "new 0 0 65 15").attr('xml:space', "preserve");
                     ohlc_indicator_g.append('path').attr("d", "M65.1,0H11C8.2,0,6.8,0.7,4.5,2.7L0,7.2l4.3,4.6c0,0,3,3.2,6.5,3.2H65L65.1,0L65.1,0z").attr('class', 'ohlc_indicator');

@@ -380,6 +380,7 @@ function updateEma12(){
             d3.selectAll('.nv12_g_wrapper').classed('hide',false);
             break;
         }
+        d3.select('.c12_g_wrapper').classed('hide',false);
     }else{
         switch(activeDrop){
             case "v":
@@ -395,6 +396,7 @@ function updateEma12(){
             d3.selectAll('.nv12_g_wrapper').classed('hide',true);
             break;
         }
+        d3.select('.c12_g_wrapper').classed('hide',true);
     }
 }
 
@@ -415,6 +417,7 @@ function updateEma26(){
             d3.selectAll('.nv26_g_wrapper').classed('hide',false);
             break;
         }
+        d3.select('.c26_g_wrapper').classed('hide',false);
     }else{
         switch(activeDrop){
             case "v":
@@ -430,6 +433,7 @@ function updateEma26(){
             d3.selectAll('.nv26_g_wrapper').classed('hide',true);
             break;
         }
+        d3.select('.c26_g_wrapper').classed('hide',true);
     }  
 }
 function formatDate(date) {

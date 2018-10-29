@@ -234,6 +234,12 @@ function topChart() {
                         .call(zoom).on("wheel.zoom", null);
                     drawEmaChart(topSvg, vema12, 'v12');
                     drawEmaChart(topSvg, vema26, 'v26');
+                    drawEmaChart(topSvg, psema12, 'ps12');
+                    drawEmaChart(topSvg, psema26, 'ps26');
+                    drawEmaChart(topSvg, pvema12, 'pv12');
+                    drawEmaChart(topSvg, pvema26, 'pv26');
+                    drawEmaChart(topSvg, nvema12, 'nv12');
+                    drawEmaChart(topSvg, nvema26, 'nv26');
 
                     function mousemove() {
                         var x0 = x.invert(d3.mouse(this)[0]);

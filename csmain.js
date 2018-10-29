@@ -117,10 +117,17 @@ function updateChartByOptions(){
             d3.select('.top_bar_wrapper').classed('hide',false);
             break;
         case 'nv':
-            d3.select('.av_area').classed('hide',false);
+            d3.select('.nv_area').classed('hide',false);
             d3.select('.top_bar_wrapper').classed('hide',false);
             break;
     }
+    updateEma12();
+    updateEma26();
+    if($('.study.ip').hasClass('active')){
+        d3.select('.line_wrapper.ip_line').classed('hide',false);    
+    }else{
+        d3.select('.line_wrapper.ip_line').classed('hide',true);    
+    } 
 }
 function calcema(period, data,stat) {
     var index = 0;
@@ -248,8 +255,15 @@ function updateTopChart(option){
             d3.selectAll('.area_wrapper').classed('hide',true);
             d3.selectAll('.top_bar_wrapper').classed('hide',true);
 
-            d3.selectAll('.sv_line').classed('hide',false);
+            d3.selectAll('.sv_line').classed('hide',false);            
             activeDrop = 'v';            
+            updateEma12();
+            updateEma26();
+            if($('.study.ip').hasClass('active')){
+                d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            }else{
+                d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            } 
         break;
         case "ps":
             d3.selectAll('.line_wrapper').classed('hide',true);
@@ -259,6 +273,15 @@ function updateTopChart(option){
             d3.selectAll('.ps_line').classed('hide',false);
             d3.selectAll('.top_bar_wrapper').classed('hide',false);
             activeDrop = 'ps';
+
+            updateEma12();
+            updateEma26();
+            if($('.study.ip').hasClass('active')){
+                d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            }else{
+                d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            } 
+
             break;
         case "pv":
             d3.selectAll('.line_wrapper').classed('hide',true);
@@ -268,6 +291,14 @@ function updateTopChart(option){
             d3.selectAll('.pv_area').classed('hide',false);
             d3.selectAll('.top_bar_wrapper').classed('hide',false);
             activeDrop = 'pv';
+
+            updateEma12();
+            updateEma26();
+            if($('.study.ip').hasClass('active')){
+                d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            }else{
+                d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            } 
         break;
         case "nv":
             d3.selectAll('.line_wrapper').classed('hide',true);
@@ -277,74 +308,20 @@ function updateTopChart(option){
             d3.selectAll('.nv_area').classed('hide',false);
             d3.selectAll('.top_bar_wrapper').classed('hide',false);
             activeDrop = 'nv';
+
+            updateEma12();
+            updateEma26();
+            if($('.study.ip').hasClass('active')){
+                d3.select('.line_wrapper.ip_line').classed('hide',false);    
+            }else{
+                d3.select('.line_wrapper.ip_line').classed('hide',true);    
+            } 
         break;
         case "ema12":
-            d3.selectAll('.ema_12_g').classed('hide',true);
-            if($('.study.ema12').hasClass('active')){
-                switch(activeDrop){
-                    case "v":
-                    d3.selectAll('.v12_g_wrapper').classed('hide',false);
-                    break;
-                    case "ps":
-                    d3.selectAll('.ps12_g_wrapper').classed('hide',false);
-                    break;
-                    case "tv":
-                    d3.selectAll('.tv12_g_wrapper').classed('hide',false);
-                    break;
-                    case "nv":
-                    d3.selectAll('.nv12_g_wrapper').classed('hide',false);
-                    break;
-                }
-            }else{
-                switch(activeDrop){
-                    case "v":
-                    d3.selectAll('.v12_g_wrapper').classed('hide',true);
-                    break;
-                    case "ps":
-                    d3.selectAll('.ps12_g_wrapper').classed('hide',true);
-                    break;
-                    case "tv":
-                    d3.selectAll('.tv12_g_wrapper').classed('hide',true);
-                    break;
-                    case "nv":
-                    d3.selectAll('.nv12_g_wrapper').classed('hide',true);
-                    break;
-                }
-            }
+            updateEma12();
         break;
         case "ema26":
-            d3.selectAll('.ema_26_g').classed('hide',true);
-            if($('.study.ema12').hasClass('active')){
-                switch(activeDrop){
-                    case "v":
-                    d3.selectAll('.v26_g_wrapper').classed('hide',false);
-                    break;
-                    case "ps":
-                    d3.selectAll('.ps12_g_wrapper').classed('hide',false);
-                    break;
-                    case "tv":
-                    d3.selectAll('.tv12_g_wrapper').classed('hide',false);
-                    break;
-                    case "nv":
-                    d3.selectAll('.nv12_g_wrapper').classed('hide',false);
-                    break;
-                }
-            }else{
-                switch(activeDrop){
-                    case "v":
-                    d3.selectAll('.v12_g_wrapper').classed('hide',true);
-                    break;
-                    case "ps":
-                    d3.selectAll('.ps12_g_wrapper').classed('hide',true);
-                    break;
-                    case "tv":
-                    d3.selectAll('.tv12_g_wrapper').classed('hide',true);
-                    break;
-                    case "nv":
-                    d3.selectAll('.nv12_g_wrapper').classed('hide',true);
-                    break;
-                }
-            }  
+            updateEma26();
         break;
         case "ip":
             if($('.study.ip').hasClass('active')){
@@ -386,6 +363,75 @@ function updateTopChart(option){
     }
 };
 
+function updateEma12(){
+    d3.selectAll('.ema_12_g').classed('hide',true);
+    if($('.study.ema12').hasClass('active')){
+        switch(activeDrop){
+            case "v":
+            d3.selectAll('.v12_g_wrapper').classed('hide',false);
+            break;
+            case "ps":
+            d3.selectAll('.ps12_g_wrapper').classed('hide',false);
+            break;
+            case "pv":
+            d3.selectAll('.pv12_g_wrapper').classed('hide',false);
+            break;
+            case "nv":
+            d3.selectAll('.nv12_g_wrapper').classed('hide',false);
+            break;
+        }
+    }else{
+        switch(activeDrop){
+            case "v":
+            d3.selectAll('.v12_g_wrapper').classed('hide',true);
+            break;
+            case "ps":
+            d3.selectAll('.ps12_g_wrapper').classed('hide',true);
+            break;
+            case "pv":
+            d3.selectAll('.pv12_g_wrapper').classed('hide',true);
+            break;
+            case "nv":
+            d3.selectAll('.nv12_g_wrapper').classed('hide',true);
+            break;
+        }
+    }
+}
+
+function updateEma26(){
+    d3.selectAll('.ema_26_g').classed('hide',true);
+    if($('.study.ema26').hasClass('active')){
+        switch(activeDrop){
+            case "v":
+            d3.selectAll('.v26_g_wrapper').classed('hide',false);
+            break;
+            case "ps":
+            d3.selectAll('.ps26_g_wrapper').classed('hide',false);
+            break;
+            case "pv":
+            d3.selectAll('.pv26_g_wrapper').classed('hide',false);
+            break;
+            case "nv":
+            d3.selectAll('.nv26_g_wrapper').classed('hide',false);
+            break;
+        }
+    }else{
+        switch(activeDrop){
+            case "v":
+            d3.selectAll('.v26_g_wrapper').classed('hide',true);
+            break;
+            case "ps":
+            d3.selectAll('.ps26_g_wrapper').classed('hide',true);
+            break;
+            case "pv":
+            d3.selectAll('.pv26_g_wrapper').classed('hide',true);
+            break;
+            case "nv":
+            d3.selectAll('.nv26_g_wrapper').classed('hide',true);
+            break;
+        }
+    }  
+}
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),

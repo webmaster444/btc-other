@@ -62,8 +62,7 @@ function changeDomain(period){
             d.DateDisp = d3.time.format('%b');
         })                
         endDomain = data[data.length-1].Date;
-        // endDomain = data[data.length-1].Date;
-        // endDomain = Date.parse(endDate);
+        
         changeDomain(period);
         genRaw = data;
         vema12 = calcema(12, genRaw, 'v');

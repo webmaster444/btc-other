@@ -51,7 +51,8 @@ function changeDomain(period){
     // var url = "https://decryptz.com/api/v1/charts/d3-tmp?key=JnW39hF43pkbqBo&symbol=btc&interval="+interval+"&startDate="+startDate+"&endDate="+endDate;
     var url = 'https://decryptz.com/api/v1/charts/d3-tmp?symbol=btc&key=JnW39hF43pkbqBo';
     // var url = 'data.json';
-    d3.json(url, function(error, data) {        
+    d3.json(url, function(error, data) {    
+        console.log(data);
         data.forEach(function(d) {
             // d.Date = Date.parse(d.dt);
             var tmp;
@@ -59,6 +60,8 @@ function changeDomain(period){
             var t = new Date(tmp);
 
             d.Date = Date.UTC(t.getFullYear(),t.getMonth(),t.getDate());
+            // d.Date = Date.parse(d.dt);
+            // console.log(d.Date,d.Date1);
             d.DateDisp = d3.time.format('%b');
         })                
         endDomain = data[data.length-1].Date;

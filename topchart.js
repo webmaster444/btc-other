@@ -38,7 +38,7 @@ function topChart() {
                     let emaToolTip = d3.select('body').append('div').attr('class', 'emaToolTip').style('position', 'absolute').style('z-index', '100').style('background', 'white').style('padding', '5px').style('visibility', 'hidden')
                     var tmp_divider = TCount[period][interval];
                     var parseDate = d3.time.format("%d");
-                    var x = d3.time.scale()
+                    var x = d3.time.scale.utc()
                         .domain([startDomain, endDomain])
                         .range([width / tmp_divider / 2, (width - width / tmp_divider / 2)]);
 
@@ -209,7 +209,7 @@ function topChart() {
 
                         var t = Date.parse(x0);
                         var s = new Date(t);
-                        var st = Date.parse(new Date(s.getFullYear(), s.getMonth(), s.getDate()));
+                        var st = Date.UTC(s.getFullYear(), s.getMonth(), s.getDate());
 
                         var index = genData.find(function(item, i) {
                             if (item.Date === st) {
@@ -218,6 +218,7 @@ function topChart() {
                             }
                         });
 
+                        console.log(st,index);
                         focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
                         x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
                         x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);

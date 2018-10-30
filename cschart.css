@@ -69,11 +69,11 @@ body {
     shape-rendering: crispEdges;
 }
 .candles .rise {
-    stroke: #bec07a;
+    stroke: #8CC176;
     fill: #2f323c;
 }
 .sticks .rise {
-    fill: #bec07a;
+    fill: #8CC176;
 }
 .sticks .fall,
 .candles .fall {
@@ -416,8 +416,6 @@ rect.pane {
 .sv.linechart_wrapper {
     display: block;
 }
-g.sticks,
-g.candles,
 g.volumebar,
 g.sv_barbar,
 g.svbar,
@@ -428,7 +426,8 @@ g.svbar,
 path.line {
     clip-path: url(#clip);
 }
-g.tvbar {
+g.sticks,
+g.candles,g.tvbar {
     clip-path: url(#clip2);
 }
 #radioes2 label.active {

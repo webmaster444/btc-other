@@ -82,6 +82,8 @@ function changeDomain(period){
         nvema26 = calcema(26, genRaw, 'nv');
 
         mainjs();
+
+        $('#botchart_title').css('top',($('#chart1').height()/2+5));
     });
 
     $('#linechart_select').change(function() {

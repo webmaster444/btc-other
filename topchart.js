@@ -185,7 +185,7 @@ function topChart() {
                         .attr("x", 0)
                         .attr("y", 0)
                         .attr('rx', 0)
-                        .attr("width", barwidth)
+                        .attr("width", width / tmp_divider)
                         .attr("height", topHeight);
 
                     var x_line = topSvg.append('line').attr('class', 'x_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', topHeight).style('display', 'none');
@@ -701,7 +701,7 @@ var rect = d3.select(".top_g").append("svg:rect")
                         .ticks(Math.floor(botHeight / 50));
 
                     var new_genData = genData.filter(function(d) {
-                        if (d.Date > startDomain && d.Date < endDomain) {
+                        if (d.Date > startDomain && d.Date <= endDomain) {
                             return d;
                         }
                     });
@@ -779,27 +779,6 @@ var rect = d3.select(".top_g").append("svg:rect")
                         .attr("class", "axis grid")
                         .attr("transform", "translate(" + width + ",0)")
                         .call(botYAxis.orient("left").tickSize(0));
-
-                    var bands = botSvg.selectAll(".bands")
-                        .data([genData])
-                        .enter().append("g")
-                        .attr("class", "bands");
-
-                    bands.selectAll("rect")
-                        .data(function(d) {
-                            return d;
-                        })
-                        .enter().append("rect")
-                        .attr("x", function(d) {
-                            return x(d.Date) + Math.floor(barwidth / 2);
-                        })
-                        .attr("y", 0)
-                        .attr("height", Bheight)
-                        .attr("width", 1)
-                        .attr("class", function(d, i) {
-                            return "band" + i;
-                        })
-                        .style("stroke-width", Math.floor(barwidth));
 
                     var stick = botSvg.selectAll(".sticks")
                         .data([genData])

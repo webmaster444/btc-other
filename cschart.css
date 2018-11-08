@@ -326,9 +326,11 @@ fieldset {
     stroke: #8cc176;
 }
 .pvarea {
-    stroke: #8cc176;
+    stroke: none;
 }
-.nvarea,
+.nvarea{
+    stroke: none;
+}
 .nvline {
     stroke: #fc7a7a;
 }
@@ -367,8 +369,8 @@ fieldset {
     fill: #8cc176;
 }
 .tv_indicator {
-    stroke: #9fb0ba;
-    fill: #9fb0ba;
+    stroke: #B82C0C;
+    fill: #B82C0C;
 }
 .ema12_indicator {
     stroke: #70b0bb;
@@ -419,7 +421,7 @@ rect.pane {
 g.volumebar,
 g.sv_barbar,
 g.svbar,
-.pvarea,
+.pvarea,.pvline,.nvline,
 .nvarea {
     clip-path: url(#clip);
 }

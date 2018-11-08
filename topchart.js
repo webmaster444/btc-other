@@ -16,7 +16,7 @@ function topChart() {
         var commaFormat = d3.format(",");
         var kFormat = d3.format('.2s');
         var nv_color = '#B95F61';
-        var pv_color = '#31e41d';
+        var pv_color = '#5CFF58';
 
         function monthDay(d) {
             var timeFormat = d3.time.format('%e');
@@ -75,7 +75,7 @@ function topChart() {
                     });
 
                     bar_y.domain([0, d3.max(new_genData, function(d) {
-                        return d["v"];
+                        return d["tv"];
                     })]).nice();
 
                     topY.domain(d3.extent(new_genData, function(d) {
@@ -97,7 +97,7 @@ function topChart() {
                     var valuelinetv = d3.svg.line().x(function(d) {
                         return x(d.Date);
                     }).y(function(d) {
-                        return tmp_y(d['v']);
+                        return tmp_y(d['tv']);
                     }).interpolate('basis');
                     var valuelineps = d3.svg.line().x(function(d) {
                         return x(d.Date);
@@ -110,6 +110,18 @@ function topChart() {
                         return tmp_y(d['ps']);
                     }).interpolate('basis');
                     
+                    var valuelinepv = d3.svg.line().x(function(d) {
+                        return x(d.Date);
+                    }).y(function(d) {
+                        return tmp_y(d['pv']);
+                    }).interpolate('basis');
+
+                    var valuelinenv = d3.svg.line().x(function(d) {
+                        return x(d.Date);
+                    }).y(function(d) {
+                        return tmp_y(d['nv']);
+                    }).interpolate('basis');
+
                     var valuelineema12 = d3.svg.line().x(function(d) {
                         return x(d.Date);
                     }).y(function(d) {
@@ -134,9 +146,9 @@ function topChart() {
                         .attr("id", "clip")
                         .append("rect")
                         .attr("width", width)
-                        .attr("height", (topHeight+30));
+                        .attr("height", (topHeight));
                     
-                    drawBarChart('v', 'sv');
+                    drawBarChart('tv', 'sv');
                     if (period == '1w') {
                         topSvg.append("g")
                             .attr("class", "axis xaxis")
@@ -160,7 +172,7 @@ function topChart() {
                         .attr("transform", "translate(" + width + ",0)")
                         .call(yAxis.orient("right").tickSize(6));
                     
-                    drawLineChart('v', 'sv');
+                    drawLineChart('tv', 'sv');
                     drawLineChart('ps', 'ps');
                     drawLineChart('ip', 'ip');
                     drawAreaChart('pv', 'pv');
@@ -188,7 +200,7 @@ function topChart() {
                         .attr("width", width / tmp_divider)
                         .attr("height", topHeight);
 
-                    var x_line = topSvg.append('line').attr('class', 'x_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', topHeight).style('display', 'none');
+                    // var x_line = topSvg.append('line').attr('class', 'x_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', topHeight).style('display', 'none');
                     var y_line = topSvg.append('line').attr('class', 'y_grid_line').attr('x1', 0).attr('y1', 0).attr('x2', (width - 10)).attr('y2', 0).style('display', 'none');
                     
 
@@ -210,7 +222,8 @@ function topChart() {
                         var t = Date.parse(x0);
                         var s = new Date(t);
                         var st = Date.UTC(s.getFullYear(), s.getMonth(), s.getDate());
-
+                        console.log(x0);
+                        console.log(st);
                         var index = genData.find(function(item, i) {
                             if (item.Date === st) {
                                 index = i;
@@ -221,7 +234,7 @@ function topChart() {
                         console.log(st,index);
                         focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
                         x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
-                        x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
+                        // x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
                         y_line.attr('y1', d3.mouse(this)[1]).attr('y2', d3.mouse(this)[1]);
                         if(activeDrop=='ps'){
                             focus_g.select("text").text(y0.toFixed(2));
@@ -231,7 +244,7 @@ function topChart() {
 
                         bot_focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
                         bot_x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
-                        bot_x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
+                        // bot_x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
                         bot_y_line.attr('y1', d3.mouse(this)[1]).attr('y2', d3.mouse(this)[1]);
                         bot_focus_g.select("text").text(y1.toFixed(0));
 
@@ -244,8 +257,9 @@ function topChart() {
                         $('#huSocialVolume').html("Social Volume: " + kFormat(index.tv));
                         var tmp_str = "";
                         switch (activeDrop) {
-                            case "v":
-                                tmp_str = "Social Volume: "
+                            case "tv":
+                                tmp_str = "Social Volume: ";
+                                $('#huSocialVolume').html("");
                                 break;
                             case "ps":
                                 tmp_str = "% Positive Sentiment: ";
@@ -318,7 +332,7 @@ function topChart() {
                             .attr("d", valuelineps(genData));
 
                         tmp_y.domain(d3.extent(new_genData, function(d) {
-                            return d['v'];
+                            return d['tv'];
                         })).nice();
                         d3.selectAll(".svline")
                             .attr("d", valuelinetv(genData));
@@ -328,6 +342,19 @@ function topChart() {
                         })).nice();
                         d3.selectAll(".nvarea")
                             .attr("d", valueareanv(genData));
+
+                        tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['pv'];
+                        })).nice();
+                        d3.selectAll(".pvline")
+                            .attr("d", valuelinepv(genData));
+
+
+                        tmp_y.domain(d3.extent(new_genData, function(d) {
+                            return d['nv'];
+                        })).nice();
+                        d3.selectAll(".nvline")
+                            .attr("d", valuelinenv(genData));
 
                         d3.selectAll(".v12.emaline").attr("d", valuelineema12(vema12));
                         d3.selectAll(".v26.emaline").attr("d", valuelineema12(vema26));
@@ -610,9 +637,17 @@ function topChart() {
                             return d[MValue];
                         })).nice();
 
+                        console.log(tmp_y.domain());
                         var valuearea = d3.svg.area().x(function(d) {
                             return x(d.Date);
                         }).y0(topHeight).y1(function(d) {
+                            return tmp_y(d[MValue]);
+                        }).interpolate('basis');
+
+                        console.log(new_genData);
+                        var valueline = d3.svg.line().x(function(d) {
+                            return x(d.Date);
+                        }).y(function(d) {
                             return tmp_y(d[MValue]);
                         }).interpolate('basis');
 
@@ -622,9 +657,13 @@ function topChart() {
                             .attr("class", mname + "area area")
                             .attr("d", valuearea(genData))
                             .attr("fill", "#path_grad" + mname);
+
+                        chart_wrapper.append("path")
+                            .attr("class", mname + "line area")
+                            .attr("d", valueline(genData))                            
                     }
 
-var rect = d3.select(".top_g").append("svg:rect")
+                    var rect = d3.select(".top_g").append("svg:rect")
                         .attr("class", "pane")
                         .attr("width", width)
                         .attr("height", (topHeight))
@@ -633,19 +672,19 @@ var rect = d3.select(".top_g").append("svg:rect")
                             d3.select(this).style('cursor', '-webkit-grabbing');
                             focus_g.style("display", "none");
                             x_move_wrapper.style("display", "none");
-                            x_line.style('display', "none");
+                            // x_line.style('display', "none");
                             y_line.style('display', "none")
                         })
                         .on('mouseup', function() {
                             d3.select(this).style('cursor', 'crosshair');
                             focus_g.style("display", null);
                             x_move_wrapper.style("display", null);
-                            x_line.style('display', null);
+                            // x_line.style('display', null);
                             y_line.style('display', null)
 
                             bot_focus_g.style("display", null);
                             bot_x_move_wrapper.style("display", null);
-                            bot_x_line.style('display', null);
+                            // bot_x_line.style('display', null);
                             bot_y_line.style('display', null)
                         })
                         .on("mouseover", function() {
@@ -653,17 +692,17 @@ var rect = d3.select(".top_g").append("svg:rect")
                             x_move_wrapper.style("display", null);
                             bot_focus_g.style("display", null);
                             bot_x_move_wrapper.style("display", null);
-                            x_line.style('display', null);
+                            // x_line.style('display', null);
                             y_line.style('display', null);
-                            bot_x_line.style('display', null);
+                            // bot_x_line.style('display', null);
                             bot_y_line.style('display', null);
                         })
                         .on("mouseout", function() {
                             focus_g.style("display", "none");
                             x_move_wrapper.style("display", "none");
-                            x_line.style('display', 'none');
+                            // x_line.style('display', 'none');
                             y_line.style('display', 'none');
-                            bot_x_line.style('display', 'none');
+                            // bot_x_line.style('display', 'none');
                             bot_y_line.style('display', 'none');
                             $('.toolTip').hide();
                         })
@@ -693,7 +732,7 @@ var rect = d3.select(".top_g").append("svg:rect")
                     var botBarY = d3.scale.linear().rangeRound([barHeight, 0]);
 
                     botBarY.domain([0, d3.max(new_genData, function(d) {
-                        return d["tv"];
+                        return d["v"];
                     })]).nice();
 
 
@@ -740,13 +779,13 @@ var rect = d3.select(".top_g").append("svg:rect")
                             return x(d.Date) - barwidth / 2;
                         })
                         .attr("y", function(d) {
-                            return botBarY(d['tv']);
+                            return botBarY(d['v']);
                         })
                         .attr("class", function(d, i) {
                             return 'tv' + i + " volume";
                         })
                         .attr("height", function(d) {
-                            return botBarY(0) - botBarY(d['tv']);
+                            return botBarY(0) - botBarY(d['v']);
                         })
                         .attr("width", barwidth);
 
@@ -884,14 +923,14 @@ var rect = d3.select(".top_g").append("svg:rect")
                             d3.select(this).style('cursor', '-webkit-grabbing');
                             focus_g.style("display", "none");
                             x_move_wrapper.style("display", "none");
-                            x_line.style('display', "none");
+                            // x_line.style('display', "none");
                             y_line.style('display', "none")
                         })
                         .on('mouseup', function() {
                             d3.select(this).style('cursor', 'crosshair');
                             focus_g.style("display", null);
                             x_move_wrapper.style("display", null);
-                            x_line.style('display', null);
+                            // x_line.style('display', null);
                             y_line.style('display', null)
                         })
                         .on("mouseover", function() {
@@ -899,9 +938,9 @@ var rect = d3.select(".top_g").append("svg:rect")
                             bot_x_move_wrapper.style("display", null);
                             focus_g.style("display", null);
                             x_move_wrapper.style("display", null);
-                            bot_x_line.style('display', null);
+                            // bot_x_line.style('display', null);
                             bot_y_line.style('display', null)
-                            x_line.style('display', null);
+                            // x_line.style('display', null);
                             y_line.style('display', null)
                         })
                         .on("mouseout", function() {
@@ -909,9 +948,9 @@ var rect = d3.select(".top_g").append("svg:rect")
                             bot_x_move_wrapper.style("display", "none");
                             focus_g.style("display", "none");
                             x_move_wrapper.style("display", "none");
-                            bot_x_line.style('display', 'none');
+                            // bot_x_line.style('display', 'none');
                             bot_y_line.style('display', 'none')
-                            x_line.style('display', 'none');
+                            // x_line.style('display', 'none');
                             y_line.style('display', 'none')
                         })
                         .on("mousemove", mousemove)

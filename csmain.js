@@ -20,7 +20,7 @@ var TCount = {
     "6m": {"day":180},
     "1y": {"day":365}
 }
-var activeDrop = 'v';
+var activeDrop = 'tv';
 changeDomain(period);
 function changeDomain(period){
     if (period == "1w") {
@@ -64,6 +64,7 @@ function changeDomain(period){
             // console.log(d.Date,d.Date1);
             d.DateDisp = d3.time.format('%b');
         })                
+        console.log(data);
         endDomain = data[data.length-1].Date;
         
         changeDomain(period);
@@ -109,7 +110,7 @@ function displayCS() {
 }
 function updateChartByOptions(){
     switch(activeDrop){
-        case "v":
+        case "tv":
             d3.select('.sv_line').classed('hide',false);             
             break;
         case 'ps':    
@@ -260,7 +261,7 @@ function updateTopChart(option){
             // d3.selectAll('.top_bar_wrapper').classed('hide',true);
 
             // d3.selectAll('.sv_line').classed('hide',false);            
-            activeDrop = 'v';            
+            activeDrop = 'tv';            
             updateEma12();
             updateEma26();            
             // if($('.study.ip').hasClass('active')){
@@ -418,7 +419,7 @@ function updateEma26(){
     d3.selectAll('.ema_26_g').classed('hide',true);
     if($('.study.ema26').hasClass('active')){
         switch(activeDrop){
-            case "v":
+            case "tv":
             d3.selectAll('.v26_g_wrapper').classed('hide',false);
             break;
             case "ps":
@@ -434,7 +435,7 @@ function updateEma26(){
         d3.select('.c26_g_wrapper').classed('hide',false);
     }else{
         switch(activeDrop){
-            case "v":
+            case "tv":
             d3.selectAll('.v26_g_wrapper').classed('hide',true);
             break;
             case "ps":

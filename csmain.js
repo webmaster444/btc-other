@@ -6,6 +6,7 @@ var period = "1w";
 var endDomain = Date.parse(endDate);
 var startDomain = Date.parse(startDate);
 var timestampduration = 0;
+var timezoneOffset;
 var interval='day';
 var topY;
 var TCount = {
@@ -57,9 +58,16 @@ function changeDomain(period){
             // d.Date = Date.parse(d.dt);
             var tmp;
             tmp = Date.parse(d.dt);
+            console.log(tmp);
             var t = new Date(tmp);
 
-            d.Date = Date.UTC(t.getFullYear(),t.getMonth(),t.getDate());
+            timezoneOffset =  t.getTimezoneOffset();
+            var dd = t.getUTCDate();            
+            var yy = t.getUTCFullYear();            
+            var mm = t.getUTCMonth();            
+            
+            // d.Date = Date.UTC(n.getFullYear(),n.getMonth(),n.getDate());
+            d.Date = Date.UTC(yy,mm,dd);
             // d.Date = Date.parse(d.dt);
             // console.log(d.Date,d.Date1);
             d.DateDisp = d3.time.format('%b');

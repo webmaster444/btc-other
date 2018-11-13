@@ -214,27 +214,26 @@ function topChart() {
                     drawEmaChart(topSvg, nvema26, 'nv26');
 
                     function mousemove() {
-                        console.log('mousemove');
+                        
                         var x0 = x.invert(d3.mouse(this)[0]);
                         var y0 = topY.invert(d3.mouse(this)[1]);
                         var y1 = botY.invert(d3.mouse(this)[1]);
 
-                        var t = Date.parse(x0);
-                        var s = new Date(t);
-                        var st = Date.UTC(s.getFullYear(), s.getMonth(), s.getDate());
-                        console.log(x0);
-                        console.log(st);
+                        var t = Date.parse(x0);                        
+                        t += 12 * 3600 * 1000 + timezoneOffset * 60000;
+
+                        var s = new Date(t);                        
+                        var st = Date.UTC(s.getFullYear(), s.getMonth(), s.getDate());                                            
                         var index = genData.find(function(item, i) {
                             if (item.Date === st) {
                                 index = i;
                                 return i;
                             }
                         });
-
-                        console.log(st,index);
+                           
+                        var rectWidth = width / tmp_divider / 2;
                         focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
-                        x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
-                        // x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
+                        x_move_wrapper.attr('transform', "translate(" + (x(index.Date) - rectWidth) + "," + 0 + ")");                        
                         y_line.attr('y1', d3.mouse(this)[1]).attr('y2', d3.mouse(this)[1]);
                         if(activeDrop=='ps'){
                             focus_g.select("text").text(y0.toFixed(2));
@@ -243,12 +242,16 @@ function topChart() {
                         }                        
 
                         bot_focus_g.attr("transform", "translate(" + (width-10) + "," + (d3.mouse(this)[1] - 7) + ")");
-                        bot_x_move_wrapper.attr('transform', "translate(" + d3.mouse(this)[0] + "," + 0 + ")");
-                        // bot_x_line.attr('x1', d3.mouse(this)[0]).attr('x2', d3.mouse(this)[0]);
+                        bot_x_move_wrapper.attr('transform', "translate(" + (x(index.Date) - rectWidth) + "," + 0 + ")");                        
                         bot_y_line.attr('y1', d3.mouse(this)[1]).attr('y2', d3.mouse(this)[1]);
                         bot_focus_g.select("text").text(y1.toFixed(0));
 
-                        $('#huDate').html(yyyymmdd(new Date(index.Date)));
+                        var t = new Date(index.Date);
+                        var dd = t.getUTCDate();            
+                        var yy = t.getUTCFullYear();            
+                        var mm = t.getUTCMonth()+1; 
+                        
+                        $('#huDate').html(yy+'-'+mm+'-'+dd);
                         $('#huOpen').html("Open: " + commaFormat(index.o));
                         $('#huClose').html("Close: " + commaFormat(index.c));
                         $('#huHigh').html("High: " + commaFormat(index.h));
@@ -799,13 +802,13 @@ function topChart() {
                         botSvg.append("g")
                             .attr("class", "axis xaxis")
                             .attr("transform", "translate(0," + botHeight + ")")                                    
-                            .call(xAxis.orient("bottom"));
+                            .call(xAxis.orient("bottom").ticks(8));
                         botSvg.append('line').attr('x1', 0).attr('x2', width).attr('y1', botHeight).attr('y2', botHeight).attr('stroke', 'white').attr('stroke-width', '1px');
                     } else {
                         botSvg.append("g")
                             .attr("class", "axis xaxis")
-                            .attr("transform", "translate(0," + botHeight + ")")                            
-                            .call(xAxis.orient("bottom").ticks(8));
+                            .attr("transform", "translate(0," + botHeight + ")")                                                        
+                            .call(xAxis.orient("bottom"));
                         botSvg.append('line').attr('x1', 0).attr('x2', width).attr('y1', botHeight).attr('y2', botHeight).attr('stroke', 'white').attr('stroke-width', '1px');
                     }
 
